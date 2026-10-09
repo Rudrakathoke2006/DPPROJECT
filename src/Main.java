@@ -94,6 +94,9 @@ public class Main {
             System.out.println("5. Publish event update");
             System.out.println("6. Create advanced event (Builder)");
             System.out.println("7. Duplicate existing event (Prototype)");
+            System.out.println("8. Edit event (Memento)");
+            System.out.println("9. Undo last event edit (Memento)");
+            System.out.println("10. View event edit history");
             System.out.println("0. Logout");
         } else if (role.equals("HOD") || role.equals("DEAN")) {
             System.out.println("1. View all events");
@@ -149,6 +152,12 @@ public class Main {
             if (system.getEventService().duplicateEvent(user)) {        // Proxy access check
                 new CloneEventService().runConsoleFlow(user, scanner);
             }
+        } else if (choice.equals("8")) {
+            new memento.EventEditService().edit(user, scanner);
+        } else if (choice.equals("9")) {
+            new memento.EventEditService().undoLast(user, scanner);
+        } else if (choice.equals("10")) {
+            new memento.EventEditService().showHistory(user, scanner);
         } else {
             System.out.println("Invalid choice.");
         }

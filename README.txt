@@ -1,5 +1,5 @@
 SMART UNIVERSITY EVENT & FEST MANAGEMENT SYSTEM
-Core Java + CSV File Handling + 7 Design Patterns
+Core Java + CSV File Handling + 10 Design Patterns
 
 Patterns:
 1. Singleton - singleton/FestManagementSystem.java
@@ -9,6 +9,9 @@ Patterns:
 5. Abstract Factory - abstractfactory/ResourceFactory and concrete factories
 6. Observer - observer/EventUpdateSubject / StudentObserver
 7. Bridge - bridge/Notification + NotificationSender hierarchies
+8. Builder - builder/EventBuilder and AdvancedEventCreationService
+9. Prototype - model/EventPrototype and prototype/CloneEventService
+10. Memento - model/EventMemento and memento/EventEditService / EventHistoryCaretaker
 
 Storage: CSV only. No SQL/JDBC. No ArrayList/HashMap is used.
 
