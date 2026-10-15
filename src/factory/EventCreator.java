@@ -29,7 +29,7 @@ public abstract class EventCreator {
                 venue
         );
 
-        System.out.println(
+        view.ConsoleView.println(
                 "\nEvent created successfully!"
         );
 

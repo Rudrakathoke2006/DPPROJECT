@@ -10,7 +10,7 @@ public class RegistrationFileHandler {
     public boolean registerStudent(String eventId, String eventName, String studentUsername, String channel) {
         ensureFile();
         if (isRegistered(eventId, studentUsername)) {
-            System.out.println("Student is already registered for this event.");
+            view.ConsoleView.println("Student is already registered for this event.");
             return false;
         }
 
@@ -18,10 +18,10 @@ public class RegistrationFileHandler {
         try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH, true))) {
             writer.println(registrationId + "," + clean(eventId) + "," + clean(eventName) + ","
                     + clean(studentUsername) + "," + clean(channel.toUpperCase()));
-            System.out.println("Registration successful. Registration ID: " + registrationId);
+            view.ConsoleView.println("Registration successful. Registration ID: " + registrationId);
             return true;
         } catch (IOException e) {
-            System.out.println("Error saving registration: " + e.getMessage());
+            view.ConsoleView.println("Error saving registration: " + e.getMessage());
             return false;
         }
     }
@@ -37,7 +37,7 @@ public class RegistrationFileHandler {
                         && data[3].equalsIgnoreCase(studentUsername)) return true;
             }
         } catch (IOException e) {
-            System.out.println("Error reading registrations: " + e.getMessage());
+            view.ConsoleView.println("Error reading registrations: " + e.getMessage());
         }
         return false;
     }
@@ -48,18 +48,18 @@ public class RegistrationFileHandler {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             reader.readLine();
-            System.out.println("\n======= MY REGISTRATIONS =======");
+            view.ConsoleView.println("\n======= MY REGISTRATIONS =======");
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",", -1);
                 if (data.length >= 5 && data[3].equalsIgnoreCase(username)) {
                     found = true;
-                    System.out.println(data[0] + " | " + data[1] + " | " + data[2] + " | " + data[4]);
+                    view.ConsoleView.println(data[0] + " | " + data[1] + " | " + data[2] + " | " + data[4]);
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading registrations: " + e.getMessage());
+            view.ConsoleView.println("Error reading registrations: " + e.getMessage());
         }
-        if (!found) System.out.println("No registrations found.");
+        if (!found) view.ConsoleView.println("No registrations found.");
     }
 
     public String getFilePath() {
@@ -84,7 +84,7 @@ public class RegistrationFileHandler {
         try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
             writer.println(HEADER);
         } catch (IOException e) {
-            System.out.println("Error creating registrations file: " + e.getMessage());
+            view.ConsoleView.println("Error creating registrations file: " + e.getMessage());
         }
     }
 

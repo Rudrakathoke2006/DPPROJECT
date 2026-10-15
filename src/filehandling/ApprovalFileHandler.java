@@ -13,22 +13,22 @@ public class ApprovalFileHandler {
     public boolean saveApproval(ApprovalRequest request) {
         ensureFile();
         if (approvalExists(request.getEventId())) {
-            System.out.println("Approval request already exists for this event.");
+            view.ConsoleView.println("Approval request already exists for this event.");
             return false;
         }
         try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH, true))) {
             writer.println(toCsv(request));
-            System.out.println("Approval record saved.");
+            view.ConsoleView.println("Approval record saved.");
             return true;
         } catch (IOException e) {
-            System.out.println("Error saving approval: " + e.getMessage());
+            view.ConsoleView.println("Error saving approval: " + e.getMessage());
             return false;
         }
     }
 
     public boolean createInitialApproval(Event event, String facultyUsername) {
         if (facultyUsername == null || facultyUsername.trim().isEmpty()) {
-            System.out.println("No Faculty approver is configured.");
+            view.ConsoleView.println("No Faculty approver is configured.");
             return false;
         }
         ApprovalRequest request = new ApprovalRequest(
@@ -48,7 +48,7 @@ public class ApprovalFileHandler {
                 if (data.length >= 8 && data[0].equalsIgnoreCase(eventId)) return true;
             }
         } catch (IOException e) {
-            System.out.println("Error reading approvals: " + e.getMessage());
+            view.ConsoleView.println("Error reading approvals: " + e.getMessage());
         }
         return false;
     }
@@ -59,7 +59,7 @@ public class ApprovalFileHandler {
         try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
             writer.println(HEADER);
         } catch (IOException e) {
-            System.out.println("Error creating approvals file: " + e.getMessage());
+            view.ConsoleView.println("Error creating approvals file: " + e.getMessage());
         }
     }
 

@@ -72,15 +72,15 @@ public abstract class Event implements EventPrototype {
 
     public void displayDetails() {
 
-        System.out.println("\n-----------------------------");
-        System.out.println("Event ID   : " + eventId);
-        System.out.println("Event Name : " + eventName);
-        System.out.println("Type       : " + eventType);
-        System.out.println("Level      : " + eventLevel);
-        System.out.println("Organizer  : " + organizer);
-        System.out.println("Date       : " + date);
-        System.out.println("Venue      : " + venue);
-        System.out.println("Status     : " + status);
-        System.out.println("-----------------------------");
+        view.ConsoleView.println("\n-----------------------------");
+        view.ConsoleView.println("Event ID   : " + eventId);
+        view.ConsoleView.println("Event Name : " + eventName);
+        view.ConsoleView.println("Type       : " + eventType);
+        view.ConsoleView.println("Level      : " + eventLevel);
+        view.ConsoleView.println("Organizer  : " + organizer);
+        view.ConsoleView.println("Date       : " + date);
+        view.ConsoleView.println("Venue      : " + venue);
+        view.ConsoleView.println("Status     : " + status);
+        view.ConsoleView.println("-----------------------------");
     }
 }

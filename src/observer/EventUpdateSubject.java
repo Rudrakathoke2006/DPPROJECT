@@ -24,7 +24,7 @@ public class EventUpdateSubject {
 
         if (observerCount >= MAX_OBSERVERS) {
 
-            System.out.println(
+            view.ConsoleView.println(
                     "Maximum observers reached."
             );
 
@@ -34,7 +34,7 @@ public class EventUpdateSubject {
         observers[observerCount] = observer;
         observerCount++;
 
-        System.out.println(
+        view.ConsoleView.println(
                 "Observer registered successfully."
         );
     }

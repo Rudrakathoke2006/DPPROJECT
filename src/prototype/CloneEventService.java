@@ -18,49 +18,49 @@ public class CloneEventService {
     private final AdvancedEventCreationService submission = new AdvancedEventCreationService();
 
     public void runConsoleFlow(User user, Scanner scanner) {
-        System.out.println("\n===== DUPLICATE EXISTING EVENT (Prototype) =====");
+        view.ConsoleView.println("\n===== DUPLICATE EXISTING EVENT (Prototype) =====");
         eventFileHandler.displayAllEvents();
 
-        System.out.print("\nSource Event ID: ");
-        String sourceId = scanner.nextLine().trim();
+        view.ConsoleView.print("\nSource Event ID: ");
+        String sourceId = view.ConsoleView.readLine(scanner).trim();
         Event source = cloner.loadEvent(sourceId);
         if (source == null) {
-            System.out.println("Source event not found.");
+            view.ConsoleView.println("Source event not found.");
             return;
         }
 
-        System.out.println("\n--- Reusable fields from source " + source.getEventId() + " ---");
-        System.out.println("Type                : " + source.getEventType());
-        System.out.println("Level               : " + source.getEventLevel());
-        System.out.println("Source venue        : " + source.getVenue());
+        view.ConsoleView.println("\n--- Reusable fields from source " + source.getEventId() + " ---");
+        view.ConsoleView.println("Type                : " + source.getEventType());
+        view.ConsoleView.println("Level               : " + source.getEventLevel());
+        view.ConsoleView.println("Source venue        : " + source.getVenue());
         source.getSpecification().copyAsTemplate().display();
 
-        System.out.print("\nNEW Event ID: ");
-        String newId = scanner.nextLine().trim();
-        System.out.print("New Event Name (Enter = \"" + source.getEventName() + " (Copy)\"): ");
-        String newName = scanner.nextLine();
-        System.out.print("New Date (e.g. 15-03-2026): ");
-        String newDate = scanner.nextLine();
-        System.out.print("New Venue (Enter = keep \"" + source.getVenue() + "\"): ");
-        String newVenue = scanner.nextLine();
+        view.ConsoleView.print("\nNEW Event ID: ");
+        String newId = view.ConsoleView.readLine(scanner).trim();
+        view.ConsoleView.print("New Event Name (Enter = \"" + source.getEventName() + " (Copy)\"): ");
+        String newName = view.ConsoleView.readLine(scanner);
+        view.ConsoleView.print("New Date (e.g. 15-03-2026): ");
+        String newDate = view.ConsoleView.readLine(scanner);
+        view.ConsoleView.print("New Venue (Enter = keep \"" + source.getVenue() + "\"): ");
+        String newVenue = view.ConsoleView.readLine(scanner);
 
         Event clone;
         try {
             clone = prepareClone(sourceId, newId, newName, user.getName(), newDate, newVenue);
         } catch (IllegalArgumentException e) {
-            System.out.println("Duplicate failed: " + e.getMessage());
+            view.ConsoleView.println("Duplicate failed: " + e.getMessage());
             return;
         }
 
         submission.showSummary(clone);
-        System.out.print("\nSave this duplicate? (yes/no): ");
-        if (!scanner.nextLine().trim().equalsIgnoreCase("yes")) {
-            System.out.println("Cancelled. Nothing was saved.");
+        view.ConsoleView.print("\nSave this duplicate? (yes/no): ");
+        if (!view.ConsoleView.readLine(scanner).trim().equalsIgnoreCase("yes")) {
+            view.ConsoleView.println("Cancelled. Nothing was saved.");
             return;
         }
 
         if (submission.submitNewEvent(clone)) {
-            System.out.println("Duplicate created with PENDING status and a fresh approval request.");
+            view.ConsoleView.println("Duplicate created with PENDING status and a fresh approval request.");
         }
     }
 

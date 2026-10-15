@@ -14,4 +14,7 @@ public interface EventService {
     boolean createAdvancedEvent(User user);
 
     boolean duplicateEvent(User user);
+
+    // Mediator entry point: any authenticated user may view coordination status
+    boolean viewCoordinationStatus(User user);
 }

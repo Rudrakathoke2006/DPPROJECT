@@ -1,1 +1,5 @@
 eventId,eventName,recipient,channel,message
+EVT101,AI and Robotics Hackathon,aarav,EMAIL,Registration confirmed for the hackathon
+EVT101,AI and Robotics Hackathon,meera,INAPP,Registration confirmed for the hackathon
+EVT102,Cultural Unity Evening,meera,SMS,Schedule published for Cultural Unity Evening
+EVT104,Cloud Computing Workshop,aarav,EMAIL,Workshop registration confirmed

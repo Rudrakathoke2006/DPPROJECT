@@ -1,4 +1,5 @@
 bin/
+build/
 out/
 scratch/
 *.class
@@ -6,3 +7,9 @@ scratch/
 .idea/shelf/
 .DS_Store
 Thumbs.db
+
+# Frontend
+frontend/runtime/
+frontend/qa-*/
+frontend/target/
+frontend/lib/

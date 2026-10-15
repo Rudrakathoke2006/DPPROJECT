@@ -9,7 +9,7 @@ public class WorkshopSupportStaff implements SupportStaff {
 
     @Override
     public void displayDetails() {
-        System.out.println(
+        view.ConsoleView.println(
                 "Support Staff: Training Support Team"
         );
     }

@@ -25,33 +25,33 @@ public class FacultyApprovalHandler
         if (!request.getApproverUsername()
                 .equals(loggedInUsername)) {
 
-            System.out.println(
+            view.ConsoleView.println(
                     "This approval is not assigned to you."
             );
 
             return;
         }
 
-        System.out.println(
+        view.ConsoleView.println(
                 "\nFaculty approval required."
         );
 
-        System.out.println(
+        view.ConsoleView.println(
                 "Event ID   : "
                         + request.getEventId()
         );
 
-        System.out.println(
+        view.ConsoleView.println(
                 "Event Name : "
                         + request.getEventName()
         );
 
-        System.out.println(
+        view.ConsoleView.println(
                 "Event Type : "
                         + request.getEventType()
         );
 
-        System.out.println(
+        view.ConsoleView.println(
                 "Event Level: "
                         + request.getEventLevel()
         );

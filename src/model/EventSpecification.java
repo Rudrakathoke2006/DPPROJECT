@@ -70,12 +70,12 @@ public class EventSpecification {
     public String getSpecialInstructions() { return specialInstructions; }
 
     public void display() {
-        System.out.println("Description         : " + description);
-        System.out.println("Budget              : " + String.format(Locale.US, "%.2f", budget));
-        System.out.println("Expected capacity   : " + capacity);
-        System.out.println("Duration (hours)    : " + durationHours);
-        System.out.println("Equipment needs     : " + equipment);
-        System.out.println("Special instructions: " + specialInstructions);
+        view.ConsoleView.println("Description         : " + description);
+        view.ConsoleView.println("Budget              : " + String.format(Locale.US, "%.2f", budget));
+        view.ConsoleView.println("Expected capacity   : " + capacity);
+        view.ConsoleView.println("Duration (hours)    : " + durationHours);
+        view.ConsoleView.println("Equipment needs     : " + equipment);
+        view.ConsoleView.println("Special instructions: " + specialInstructions);
     }
 
     /** CSV-safe text: no commas / line breaks (the project's CSV has no quoting). */

@@ -10,7 +10,7 @@ public class NotificationService {
                                       String message, String channel) {
         NotificationSender sender = getSender(channel);
         if (sender == null) {
-            System.out.println("Invalid notification channel.");
+            view.ConsoleView.println("Invalid notification channel.");
             return;
         }
 

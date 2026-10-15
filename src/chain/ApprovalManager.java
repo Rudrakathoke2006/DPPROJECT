@@ -2,6 +2,8 @@ package chain;
 
 import filehandling.EventFileHandler;
 import filehandling.UserFileHandler;
+import mediator.EventCoordinator;
+import mediator.UniversityEventCoordinator;
 import model.ApprovalRequest;
 
 import java.io.*;
@@ -14,8 +16,14 @@ public class ApprovalManager {
     private final ApprovalHandler approvalChain;
     private final UserFileHandler userFileHandler;
     private final EventFileHandler eventFileHandler;
+    private final EventCoordinator coordinator;   // Mediator: told only about FINAL decisions
 
     public ApprovalManager() {
+        this(new UniversityEventCoordinator());
+    }
+
+    public ApprovalManager(EventCoordinator coordinator) {
+        this.coordinator = coordinator;
         ApprovalHandler faculty = new FacultyApprovalHandler();
         ApprovalHandler hod = new HODApprovalHandler();
         ApprovalHandler dean = new DeanApprovalHandler();
@@ -55,7 +63,7 @@ public class ApprovalManager {
         }
 
         if (!foundAny) {
-            System.out.println("\nNo pending approvals for you.");
+            view.ConsoleView.println("\nNo pending approvals for you.");
         }
     }
 
@@ -63,7 +71,7 @@ public class ApprovalManager {
         File file = new File(FILE_PATH);
 
         if (!file.exists()) {
-            System.out.println("Approvals file not found: " + FILE_PATH);
+            view.ConsoleView.println("Approvals file not found: " + FILE_PATH);
             return null;
         }
 
@@ -96,15 +104,15 @@ public class ApprovalManager {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading approvals: " + e.getMessage());
+            view.ConsoleView.println("Error reading approvals: " + e.getMessage());
         }
 
         return null;
     }
 
     private boolean processDecision(ApprovalRequest request, Scanner scanner) {
-        System.out.print("\nApprove this event? (yes/no): ");
-        String decision = scanner.nextLine().trim();
+        view.ConsoleView.print("\nApprove this event? (yes/no): ");
+        String decision = view.ConsoleView.readLine(scanner).trim();
 
         if (decision.equalsIgnoreCase("yes")) {
             approve(request);
@@ -116,7 +124,7 @@ public class ApprovalManager {
             return true;
         }
 
-        System.out.println("Invalid choice. Request remains pending.");
+        view.ConsoleView.println("Invalid choice. Request remains pending.");
         return false;
     }
 
@@ -150,7 +158,7 @@ public class ApprovalManager {
         String nextUsername = userFileHandler.findUsernameByRole(nextRole);
 
         if (nextUsername == null) {
-            System.out.println("No " + nextRole + " approver configured.");
+            view.ConsoleView.println("No " + nextRole + " approver configured.");
             return;
         }
 
@@ -160,7 +168,7 @@ public class ApprovalManager {
         request.setRemarks(remarks);
 
         if (updateApproval(request)) {
-            System.out.println("\n" + remarks);
+            view.ConsoleView.println("\n" + remarks);
         }
     }
 
@@ -173,10 +181,11 @@ public class ApprovalManager {
                     request.getEventId(), "APPROVED");
 
             if (eventUpdated) {
-                System.out.println("\n" + remarks
+                view.ConsoleView.println("\n" + remarks
                         + " Event status is now APPROVED.");
+                coordinator.approvalFinalized(request.getEventId(), "APPROVED", request.getApproverRole());
             } else {
-                System.out.println("\nApproval updated, but event status could not be updated.");
+                view.ConsoleView.println("\nApproval updated, but event status could not be updated.");
             }
         }
     }
@@ -192,9 +201,10 @@ public class ApprovalManager {
                     request.getEventId(), "REJECTED");
 
             if (eventUpdated) {
-                System.out.println("\nEvent rejected by " + rejectingRole + ".");
+                view.ConsoleView.println("\nEvent rejected by " + rejectingRole + ".");
+                coordinator.approvalFinalized(request.getEventId(), "REJECTED", rejectingRole);
             } else {
-                System.out.println("\nApproval rejected, but event status could not be updated.");
+                view.ConsoleView.println("\nApproval rejected, but event status could not be updated.");
             }
         }
     }
@@ -224,13 +234,13 @@ public class ApprovalManager {
             }
 
         } catch (IOException e) {
-            System.out.println("Error updating approval: " + e.getMessage());
+            view.ConsoleView.println("Error updating approval: " + e.getMessage());
             deleteTempFile(temp);
             return false;
         }
 
         if (!found) {
-            System.out.println("Approval record not found for event: "
+            view.ConsoleView.println("Approval record not found for event: "
                     + updatedRequest.getEventId());
             deleteTempFile(temp);
             return false;
@@ -244,7 +254,7 @@ public class ApprovalManager {
             );
             return true;
         } catch (IOException e) {
-            System.out.println("Could not replace approvals file: " + e.getMessage());
+            view.ConsoleView.println("Could not replace approvals file: " + e.getMessage());
             deleteTempFile(temp);
             return false;
         }
@@ -252,7 +262,7 @@ public class ApprovalManager {
 
     private void deleteTempFile(File temp) {
         if (temp.exists() && !temp.delete()) {
-            System.out.println("Warning: temporary approval file could not be deleted.");
+            view.ConsoleView.println("Warning: temporary approval file could not be deleted.");
         }
     }
 

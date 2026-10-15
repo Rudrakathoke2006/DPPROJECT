@@ -1,0 +1,9 @@
+eventId,eventType,signal,outcome,detail,timestamp
+EVT101,TECHNICAL,eventCreated,APPROVAL_ROUTED,level UNIVERSITY starts at Faculty,2026-10-01 10:00:00
+EVT101,TECHNICAL,approvalFinalized,APPROVED,final authority DEAN; eligible for resource allocation,2026-10-02 11:00:00
+EVT101,TECHNICAL,resourcesAllocated,ALLOCATED,venue Main Auditorium,2026-10-03 12:00:00
+EVT101,TECHNICAL,registrationCompleted,REGISTERED,aarav; total registrations 2,2026-10-04 09:00:00
+EVT101,TECHNICAL,eventUpdated,NOTIFIED,2 registered student(s),2026-10-05 14:00:00
+EVT102,CULTURAL,approvalFinalized,APPROVED,final authority HOD; eligible for resource allocation,2026-10-02 13:00:00
+EVT103,SPORTS,eventCreated,APPROVAL_ROUTED,level DEPARTMENT starts at Faculty,2026-10-06 10:30:00
+EVT104,WORKSHOP,approvalFinalized,APPROVED,final authority FACULTY; eligible for resource allocation,2026-10-07 15:00:00

@@ -9,7 +9,7 @@ public class CulturalSupportStaff implements SupportStaff {
 
     @Override
     public void displayDetails() {
-        System.out.println(
+        view.ConsoleView.println(
                 "Support Staff: Stage Management Team"
         );
     }

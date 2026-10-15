@@ -9,7 +9,7 @@ public class WorkshopVenue implements Venue {
 
     @Override
     public void displayDetails() {
-        System.out.println(
+        view.ConsoleView.println(
                 "Venue: Seminar Hall"
         );
     }

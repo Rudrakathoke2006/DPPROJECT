@@ -23,7 +23,7 @@ public class SportsEvent extends Event {
     @Override
     public void conductEvent() {
 
-        System.out.println(
+        view.ConsoleView.println(
                 "Conducting sports event with "
                         + "sports equipment and facilities."
         );

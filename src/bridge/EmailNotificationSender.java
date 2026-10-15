@@ -8,12 +8,12 @@ public class EmailNotificationSender
             String recipient,
             String message) {
 
-        System.out.println(
+        view.ConsoleView.println(
                 "[EMAIL] To: "
                         + recipient
         );
 
-        System.out.println(
+        view.ConsoleView.println(
                 "Message: "
                         + message
         );

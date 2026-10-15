@@ -28,7 +28,7 @@ public class UserFileHandler {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading users file: " + e.getMessage());
+            view.ConsoleView.println("Error reading users file: " + e.getMessage());
         }
         return null;
     }
@@ -44,7 +44,7 @@ public class UserFileHandler {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading users file: " + e.getMessage());
+            view.ConsoleView.println("Error reading users file: " + e.getMessage());
         }
         return null;
     }
@@ -60,7 +60,7 @@ public class UserFileHandler {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading users file: " + e.getMessage());
+            view.ConsoleView.println("Error reading users file: " + e.getMessage());
         }
         return null;
     }

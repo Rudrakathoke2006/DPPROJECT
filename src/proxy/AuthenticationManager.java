@@ -17,14 +17,14 @@ public class AuthenticationManager {
                 userFileHandler.authenticateUser(username, password);
 
         if (user != null) {
-            System.out.println("\nLogin successful!");
-            System.out.println("Welcome, " + user.getName());
-            System.out.println("Role: " + user.getRole());
+            view.ConsoleView.println("\nLogin successful!");
+            view.ConsoleView.println("Welcome, " + user.getName());
+            view.ConsoleView.println("Role: " + user.getRole());
 
             return user;
         }
 
-        System.out.println("\nInvalid username or password.");
+        view.ConsoleView.println("\nInvalid username or password.");
         return null;
     }
 }

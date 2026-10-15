@@ -1,0 +1,22 @@
+"""Run against a fresh disposable runtime; includes the original integration suite."""
+import runpy
+ns=runpy.run_path('verify_http.py')
+faculty,student,check=ns['faculty'],ns['student'],ns['check']
+faculty.get('page=resources')
+check('Choose this venue' in faculty.text and 'id="allocation-form"' in faculty.text,'Venue cards expose allocation controls')
+check('header-logout' in faculty.text,'Sign out available in top bar')
+faculty.post(action='allocateVenue',id='EVT103',venueId='V01',attendees='300',budget='15000',equipment='')
+check('insufficient capacity' in faculty.text,'Selected venue validates capacity')
+faculty.post(action='allocateVenue',id='EVT103',venueId='V04',attendees='300',budget='15000',equipment='scoreboard')
+check('Selected venue, equipment and support staff allocated.' in faculty.text,'Selected venue allocated via existing strategy service')
+faculty.get('page=event&id=EVT103')
+check('Sports Complex' in faculty.text and 'Resources haven' not in faculty.text,'Allocated venue visible on event')
+student.get('page=event&id=EVT102')
+check(student.text.count('type="radio" name="channel"')==3 and 'value="INAPP" required' in student.text,'Three explicit required notification choices')
+student.post(action='register',id='EVT102',channel='')
+check('Channel is required' in student.text,'Registration blocked without channel')
+student.post(action='register',id='EVT102',channel='SMS')
+check('registration is confirmed' in student.text,'Registration accepts selected SMS channel')
+student.get('page=event&id=EVT102')
+check('Notification channel: <strong>SMS</strong>' in student.text,'Saved notification channel displayed')
+print('All 46 integration checks passed.')

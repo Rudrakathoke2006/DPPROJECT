@@ -14,7 +14,7 @@ public class NotificationFileHandler {
             writer.println(clean(eventId) + "," + clean(eventName) + "," + clean(recipient) + ","
                     + clean(channel) + "," + clean(message));
         } catch (IOException e) {
-            System.out.println("Error saving notification: " + e.getMessage());
+            view.ConsoleView.println("Error saving notification: " + e.getMessage());
         }
     }
 
@@ -24,18 +24,18 @@ public class NotificationFileHandler {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             String line;
             reader.readLine();
-            System.out.println("\n======= NOTIFICATION HISTORY =======");
+            view.ConsoleView.println("\n======= NOTIFICATION HISTORY =======");
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",", -1);
                 if (data.length >= 5 && data[2].equalsIgnoreCase(recipient)) {
                     found = true;
-                    System.out.println(data[0] + " | " + data[1] + " | " + data[3] + " | " + data[4]);
+                    view.ConsoleView.println(data[0] + " | " + data[1] + " | " + data[3] + " | " + data[4]);
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading notifications: " + e.getMessage());
+            view.ConsoleView.println("Error reading notifications: " + e.getMessage());
         }
-        if (!found) System.out.println("No notifications found.");
+        if (!found) view.ConsoleView.println("No notifications found.");
     }
 
     private void ensureFile() {
@@ -44,7 +44,7 @@ public class NotificationFileHandler {
         try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
             writer.println(HEADER);
         } catch (IOException e) {
-            System.out.println("Error creating notifications file: " + e.getMessage());
+            view.ConsoleView.println("Error creating notifications file: " + e.getMessage());
         }
     }
 

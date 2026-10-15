@@ -17,7 +17,7 @@ public class EventDetailsFileHandler {
     public boolean saveDetails(String eventId, EventSpecification spec) {
         ensureFile();
         if (detailsExist(eventId)) {
-            System.out.println("Event details already exist for this event.");
+            view.ConsoleView.println("Event details already exist for this event.");
             return false;
         }
         try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_PATH, true))) {
@@ -30,7 +30,7 @@ public class EventDetailsFileHandler {
                     + spec.getSpecialInstructions());
             return true;
         } catch (IOException e) {
-            System.out.println("Error saving event details: " + e.getMessage());
+            view.ConsoleView.println("Error saving event details: " + e.getMessage());
             return false;
         }
     }
@@ -61,7 +61,7 @@ public class EventDetailsFileHandler {
                 if (d.length >= 7 && d[0].equalsIgnoreCase(eventId)) return d;
             }
         } catch (IOException e) {
-            System.out.println("Error reading event details: " + e.getMessage());
+            view.ConsoleView.println("Error reading event details: " + e.getMessage());
         }
         return null;
     }
@@ -74,7 +74,7 @@ public class EventDetailsFileHandler {
         try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
             writer.println(HEADER);
         } catch (IOException e) {
-            System.out.println("Error creating event details file: " + e.getMessage());
+            view.ConsoleView.println("Error creating event details file: " + e.getMessage());
         }
     }
 }

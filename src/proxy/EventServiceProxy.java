@@ -16,7 +16,7 @@ public class EventServiceProxy implements EventService {
         if (user.getRole().equals("FACULTY") || user.getRole().equals("ADMIN")) {
             realEventService.createEvent(user);
         } else {
-            System.out.println("Access denied: Only Faculty/Admin can create events.");
+            view.ConsoleView.println("Access denied: Only Faculty/Admin can create events.");
         }
     }
 
@@ -32,7 +32,7 @@ public class EventServiceProxy implements EventService {
         if (user.getRole().equals("STUDENT")) {
             realEventService.registerForEvent(user);
         } else {
-            System.out.println("Access denied: Only students can register for events.");
+            view.ConsoleView.println("Access denied: Only students can register for events.");
         }
     }
         @Override
@@ -41,7 +41,7 @@ public class EventServiceProxy implements EventService {
         if (user.getRole().equals("FACULTY")) {
             return realEventService.createAdvancedEvent(user);
         }
-        System.out.println("Access denied: Only Faculty can create advanced events.");
+        view.ConsoleView.println("Access denied: Only Faculty can create advanced events.");
         return false;
     }
 
@@ -51,13 +51,19 @@ public class EventServiceProxy implements EventService {
         if (user.getRole().equals("FACULTY")) {
             return realEventService.duplicateEvent(user);
         }
-        System.out.println("Access denied: Only Faculty can duplicate events.");
+        view.ConsoleView.println("Access denied: Only Faculty can duplicate events.");
         return false;
+    }
+
+    @Override
+    public boolean viewCoordinationStatus(User user) {
+        if (!isAuthenticated(user)) return false;
+        return realEventService.viewCoordinationStatus(user);
     }
 
     private boolean isAuthenticated(User user) {
         if (user == null) {
-            System.out.println("Access denied: Please login first.");
+            view.ConsoleView.println("Access denied: Please login first.");
             return false;
         }
         return true;

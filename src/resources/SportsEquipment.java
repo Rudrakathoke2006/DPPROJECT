@@ -9,7 +9,7 @@ public class SportsEquipment implements Equipment {
 
     @Override
     public void displayDetails() {
-        System.out.println(
+        view.ConsoleView.println(
                 "Equipment: Sports Equipment Kit"
         );
     }

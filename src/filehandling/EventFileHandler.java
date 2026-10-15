@@ -13,7 +13,7 @@ public class EventFileHandler {
 
     public boolean saveEvent(Event event) {
         if (eventExists(event.getEventId())) {
-            System.out.println("Event ID already exists. Event not saved.");
+            view.ConsoleView.println("Event ID already exists. Event not saved.");
             return false;
         }
 
@@ -31,11 +31,11 @@ public class EventFileHandler {
                             + clean(event.getStatus())
             );
 
-            System.out.println("Event saved to events.csv");
+            view.ConsoleView.println("Event saved to events.csv");
             return true;
 
         } catch (IOException e) {
-            System.out.println("Error saving event: " + e.getMessage());
+            view.ConsoleView.println("Error saving event: " + e.getMessage());
             return false;
         }
     }
@@ -61,7 +61,7 @@ public class EventFileHandler {
             }
 
         } catch (IOException e) {
-            System.out.println("Error reading events: " + e.getMessage());
+            view.ConsoleView.println("Error reading events: " + e.getMessage());
         }
 
         return null;
@@ -100,13 +100,13 @@ public class EventFileHandler {
             }
 
         } catch (IOException e) {
-            System.out.println("Error updating event status: " + e.getMessage());
+            view.ConsoleView.println("Error updating event status: " + e.getMessage());
             deleteTempFile(temp);
             return false;
         }
 
         if (!found) {
-            System.out.println("Event not found while updating status: " + eventId);
+            view.ConsoleView.println("Event not found while updating status: " + eventId);
             deleteTempFile(temp);
             return false;
         }
@@ -129,7 +129,7 @@ public class EventFileHandler {
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
             reader.readLine(); // skip header
 
-            System.out.println(
+            view.ConsoleView.println(
                     approvedOnly
                             ? "\n========= APPROVED EVENTS ========="
                             : "\n========= ALL EVENTS ========="
@@ -150,22 +150,22 @@ public class EventFileHandler {
 
                 found = true;
 
-                System.out.println("\nEvent ID   : " + data[0]);
-                System.out.println("Event Name : " + data[1]);
-                System.out.println("Type       : " + data[2]);
-                System.out.println("Level      : " + data[3]);
-                System.out.println("Organizer  : " + data[4]);
-                System.out.println("Date       : " + data[5]);
-                System.out.println("Venue      : " + data[6]);
-                System.out.println("Status     : " + data[7]);
+                view.ConsoleView.println("\nEvent ID   : " + data[0]);
+                view.ConsoleView.println("Event Name : " + data[1]);
+                view.ConsoleView.println("Type       : " + data[2]);
+                view.ConsoleView.println("Level      : " + data[3]);
+                view.ConsoleView.println("Organizer  : " + data[4]);
+                view.ConsoleView.println("Date       : " + data[5]);
+                view.ConsoleView.println("Venue      : " + data[6]);
+                view.ConsoleView.println("Status     : " + data[7]);
             }
 
         } catch (IOException e) {
-            System.out.println("Error reading events: " + e.getMessage());
+            view.ConsoleView.println("Error reading events: " + e.getMessage());
         }
 
         if (!found) {
-            System.out.println("No matching events found.");
+            view.ConsoleView.println("No matching events found.");
         }
     }
 
@@ -184,7 +184,7 @@ public class EventFileHandler {
         try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
             writer.println(HEADER);
         } catch (IOException e) {
-            System.out.println("Error creating events file: " + e.getMessage());
+            view.ConsoleView.println("Error creating events file: " + e.getMessage());
         }
     }
 
@@ -217,7 +217,7 @@ public class EventFileHandler {
             return true;
 
         } catch (IOException e) {
-            System.out.println("Could not replace events file: " + e.getMessage());
+            view.ConsoleView.println("Could not replace events file: " + e.getMessage());
             deleteTempFile(temp);
             return false;
         }
@@ -225,7 +225,7 @@ public class EventFileHandler {
 
     private void deleteTempFile(File temp) {
         if (temp.exists() && !temp.delete()) {
-            System.out.println("Warning: temporary events file could not be deleted.");
+            view.ConsoleView.println("Warning: temporary events file could not be deleted.");
         }
     }
 }

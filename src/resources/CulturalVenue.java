@@ -9,7 +9,7 @@ public class CulturalVenue implements Venue {
 
     @Override
     public void displayDetails() {
-        System.out.println(
+        view.ConsoleView.println(
                 "Venue: University Auditorium"
         );
     }

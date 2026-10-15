@@ -1,1 +1,5 @@
 registrationId,eventId,eventName,studentUsername,notificationChannel
+R001,EVT101,AI and Robotics Hackathon,aarav,EMAIL
+R002,EVT101,AI and Robotics Hackathon,meera,INAPP
+R003,EVT102,Cultural Unity Evening,meera,SMS
+R004,EVT104,Cloud Computing Workshop,aarav,EMAIL

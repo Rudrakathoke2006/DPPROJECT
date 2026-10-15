@@ -26,12 +26,12 @@ public class EventNotificationManager {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error loading event observers: " + e.getMessage());
+            view.ConsoleView.println("Error loading event observers: " + e.getMessage());
             return 0;
         }
 
         if (count == 0) {
-            System.out.println("No registered students to notify.");
+            view.ConsoleView.println("No registered students to notify.");
             return 0;
         }
 

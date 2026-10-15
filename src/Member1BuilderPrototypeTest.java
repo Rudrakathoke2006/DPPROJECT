@@ -11,10 +11,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-/**
- * Automated checks for Builder + Prototype (plain Java, no JUnit).
- * RUN FROM A SCRATCH COPY OF THE PROJECT FOLDER (it writes test events into data/*.csv).
- */
 public class Member1BuilderPrototypeTest {
 
     private static int passed = 0;

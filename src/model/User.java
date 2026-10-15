@@ -39,9 +39,9 @@ public abstract class User {
     }
 
     public void displayUserDetails() {
-        System.out.println("User ID : " + userId);
-        System.out.println("Name    : " + name);
-        System.out.println("Username: " + username);
-        System.out.println("Role    : " + role);
+        view.ConsoleView.println("User ID : " + userId);
+        view.ConsoleView.println("Name    : " + name);
+        view.ConsoleView.println("Username: " + username);
+        view.ConsoleView.println("Role    : " + role);
     }
 }

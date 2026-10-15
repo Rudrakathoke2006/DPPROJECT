@@ -9,6 +9,6 @@ public class TechnicalVenue implements Venue {
 
     @Override
     public void displayDetails() {
-        System.out.println("Venue: Computer Laboratory");
+        view.ConsoleView.println("Venue: Computer Laboratory");
     }
 }

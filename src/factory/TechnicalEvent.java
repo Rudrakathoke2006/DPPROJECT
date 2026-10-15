@@ -23,7 +23,7 @@ public class TechnicalEvent extends Event {
     @Override
     public void conductEvent() {
 
-        System.out.println(
+        view.ConsoleView.println(
                 "Conducting technical event with "
                         + "technical equipment and facilities."
         );

@@ -21,7 +21,7 @@ public class EventHistoryCaretaker {
                     + "," + enc(m.getBudget()) + "," + enc(m.getCapacity()) + "," + enc(m.getDurationHours()) + "," + enc(m.getEquipment()) + "," + enc(m.getSpecialInstructions());
             Files.write(Paths.get(FILE), Collections.singletonList(row), StandardCharsets.UTF_8, StandardOpenOption.APPEND);
             return true;
-        } catch (IOException e) { System.out.println("Could not save event history: " + e.getMessage()); return false; }
+        } catch (IOException e) { view.ConsoleView.println("Could not save event history: " + e.getMessage()); return false; }
     }
 
     public synchronized List<EventMemento> history(String eventId) {
@@ -36,29 +36,32 @@ public class EventHistoryCaretaker {
                     result.add(new EventMemento(dec(d[0]), dec(d[5]), dec(d[6]), dec(d[7]), dec(d[8]), dec(d[9]), dec(d[10]), dec(d[11]), dec(d[12]), dec(d[13])));
                 } catch (IllegalArgumentException ignored) { /* ignore malformed legacy rows */ }
             }
-        } catch (IOException e) { System.out.println("Could not read event history: " + e.getMessage()); }
+        } catch (IOException e) { view.ConsoleView.println("Could not read event history: " + e.getMessage()); }
         return result;
     }
 
     /** Snapshots captured immediately before successful edits, in chronological order. */
+    /** Each successful undo consumes one edit snapshot; repeated undo walks backwards. */
     public synchronized List<EventMemento> undoableSnapshots(String eventId) {
-        List<EventMemento> result = new ArrayList<>();
-        File f = new File(FILE); if (!f.exists()) return result;
+        List<EventMemento> edits = new ArrayList<>();
+        File f = new File(FILE); if (!f.exists()) return edits;
         try (BufferedReader r = new BufferedReader(new FileReader(f))) {
             r.readLine(); String line;
             while ((line = r.readLine()) != null) {
                 String[] d = line.split(",", -1); if (d.length < 14) continue;
                 try {
-                    if (!dec(d[0]).equalsIgnoreCase(eventId) || !dec(d[4]).equals("EDIT_BEFORE_CHANGE")) continue;
-                    result.add(new EventMemento(dec(d[0]), dec(d[5]), dec(d[6]), dec(d[7]), dec(d[8]), dec(d[9]), dec(d[10]), dec(d[11]), dec(d[12]), dec(d[13])));
+                    if (!dec(d[0]).equalsIgnoreCase(eventId)) continue;
+                    String action = dec(d[4]);
+                    if (action.equals("EDIT_BEFORE_CHANGE")) edits.add(new EventMemento(dec(d[0]),dec(d[5]),dec(d[6]),dec(d[7]),dec(d[8]),dec(d[9]),dec(d[10]),dec(d[11]),dec(d[12]),dec(d[13])));
+                    else if (action.equals("UNDO_RESTORED_VERSION") && !edits.isEmpty()) edits.remove(edits.size()-1);
                 } catch (IllegalArgumentException ignored) { }
             }
-        } catch (IOException e) { System.out.println("Could not read event history: " + e.getMessage()); }
-        return result;
+        } catch (IOException e) { view.ConsoleView.println("Could not read event history: "+e.getMessage()); }
+        return edits;
     }
 
     public synchronized void displayHistory(String eventId) {
-        File f = new File(FILE); if (!f.exists()) { System.out.println("No edit history yet."); return; }
+        File f = new File(FILE); if (!f.exists()) { view.ConsoleView.println("No edit history yet."); return; }
         boolean found = false;
         try (BufferedReader r = new BufferedReader(new FileReader(f))) {
             r.readLine(); String line;
@@ -66,12 +69,12 @@ public class EventHistoryCaretaker {
                 String[] d = line.split(",", -1); if (d.length < 14) continue;
                 if (dec(d[0]).equalsIgnoreCase(eventId)) {
                     found = true;
-                    System.out.println("Version " + d[1] + " | " + dec(d[2]) + " | " + dec(d[3]) + " | " + dec(d[4]));
-                    System.out.println("  Name: " + dec(d[5]) + " | Date: " + dec(d[6]) + " | Venue: " + dec(d[7]) + " | Description: " + dec(d[8]));
+                    view.ConsoleView.println("Version " + d[1] + " | " + dec(d[2]) + " | " + dec(d[3]) + " | " + dec(d[4]));
+                    view.ConsoleView.println("  Name: " + dec(d[5]) + " | Date: " + dec(d[6]) + " | Venue: " + dec(d[7]) + " | Description: " + dec(d[8]));
                 }
             }
-        } catch (IOException e) { System.out.println("Could not display history: " + e.getMessage()); }
-        if (!found) System.out.println("No edit history for this event.");
+        } catch (IOException e) { view.ConsoleView.println("Could not display history: " + e.getMessage()); }
+        if (!found) view.ConsoleView.println("No edit history for this event.");
     }
 
     private void ensureFile() throws IOException {

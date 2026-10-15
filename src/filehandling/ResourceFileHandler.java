@@ -21,7 +21,7 @@ public class ResourceFileHandler {
                 if (data.length >= 6 && data[0].equalsIgnoreCase(eventId)) return true;
             }
         } catch (IOException e) {
-            System.out.println("Error reading resources: " + e.getMessage());
+            view.ConsoleView.println("Error reading resources: " + e.getMessage());
         }
         return false;
     }
@@ -30,7 +30,7 @@ public class ResourceFileHandler {
                                  Venue venue, Equipment equipment, SupportStaff supportStaff) {
         ensureFile();
         if (resourceExists(eventId)) {
-            System.out.println("Resources are already allocated to this event.");
+            view.ConsoleView.println("Resources are already allocated to this event.");
             return false;
         }
 
@@ -38,10 +38,10 @@ public class ResourceFileHandler {
             writer.println(clean(eventId) + "," + clean(eventName) + "," + clean(eventType) + ","
                     + clean(venue.getVenueName()) + "," + clean(equipment.getEquipmentName()) + ","
                     + clean(supportStaff.getStaffType()));
-            System.out.println("\nResources saved successfully.");
+            view.ConsoleView.println("\nResources saved successfully.");
             return true;
         } catch (IOException e) {
-            System.out.println("Error saving resources: " + e.getMessage());
+            view.ConsoleView.println("Error saving resources: " + e.getMessage());
             return false;
         }
     }
@@ -52,7 +52,7 @@ public class ResourceFileHandler {
         try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
             writer.println(HEADER);
         } catch (IOException e) {
-            System.out.println("Error creating resources file: " + e.getMessage());
+            view.ConsoleView.println("Error creating resources file: " + e.getMessage());
         }
     }
 

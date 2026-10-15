@@ -23,7 +23,7 @@ public class CulturalEvent extends Event {
     @Override
     public void conductEvent() {
 
-        System.out.println(
+        view.ConsoleView.println(
                 "Conducting cultural event with "
                         + "stage and performance facilities."
         );

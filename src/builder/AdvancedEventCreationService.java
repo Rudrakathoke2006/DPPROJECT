@@ -10,6 +10,8 @@ import model.Event;
 import model.User;
 
 import java.util.Scanner;
+import filehandling.CsvTransaction;
+import java.io.IOException;
 
 /**
  * Console workflow for "Create Advanced Event" (acts as the Builder's director)
@@ -23,46 +25,46 @@ public class AdvancedEventCreationService {
     private final EventDetailsFileHandler detailsFileHandler = new EventDetailsFileHandler();
 
     public void runConsoleFlow(User user, Scanner scanner) {
-        System.out.println("\n===== CREATE ADVANCED EVENT (Builder) =====");
-        System.out.println("1. Technical  2. Cultural  3. Sports  4. Workshop");
-        System.out.print("Event type choice: ");
-        EventCreator creator = EventCreatorProvider.forChoice(scanner.nextLine());
+        view.ConsoleView.println("\n===== CREATE ADVANCED EVENT (Builder) =====");
+        view.ConsoleView.println("1. Technical  2. Cultural  3. Sports  4. Workshop");
+        view.ConsoleView.print("Event type choice: ");
+        EventCreator creator = EventCreatorProvider.forChoice(view.ConsoleView.readLine(scanner));
         if (creator == null) {
-            System.out.println("Invalid event type.");
+            view.ConsoleView.println("Invalid event type.");
             return;
         }
 
-        System.out.println("Event Level: 1. Department  2. Inter-Department  3. University");
-        System.out.print("Event level choice: ");
-        String level = levelFromChoice(scanner.nextLine().trim());
+        view.ConsoleView.println("Event Level: 1. Department  2. Inter-Department  3. University");
+        view.ConsoleView.print("Event level choice: ");
+        String level = levelFromChoice(view.ConsoleView.readLine(scanner).trim());
         if (level == null) {
-            System.out.println("Invalid event level.");
+            view.ConsoleView.println("Invalid event level.");
             return;
         }
 
-        System.out.print("Event ID: ");
-        String id = scanner.nextLine().trim();
+        view.ConsoleView.print("Event ID: ");
+        String id = view.ConsoleView.readLine(scanner).trim();
         if (eventFileHandler.eventExists(id)) {
-            System.out.println("Event ID already exists.");
+            view.ConsoleView.println("Event ID already exists.");
             return;
         }
-        System.out.print("Event Name: ");
-        String name = scanner.nextLine();
-        System.out.print("Date (e.g. 15-03-2026): ");
-        String date = scanner.nextLine();
-        System.out.print("Proposed Venue: ");
-        String venue = scanner.nextLine();
+        view.ConsoleView.print("Event Name: ");
+        String name = view.ConsoleView.readLine(scanner);
+        view.ConsoleView.print("Date (e.g. 15-03-2026): ");
+        String date = view.ConsoleView.readLine(scanner);
+        view.ConsoleView.print("Proposed Venue: ");
+        String venue = view.ConsoleView.readLine(scanner);
 
-        System.out.println("\n--- Optional details (press Enter to skip) ---");
-        System.out.print("Description: ");
-        String description = scanner.nextLine();
+        view.ConsoleView.println("\n--- Optional details (press Enter to skip) ---");
+        view.ConsoleView.print("Description: ");
+        String description = view.ConsoleView.readLine(scanner);
         double budget = readNonNegativeDouble(scanner, "Budget: ");
         int capacity = readNonNegativeInt(scanner, "Expected attendees/capacity: ");
         int duration = readNonNegativeInt(scanner, "Duration (hours): ");
-        System.out.print("Equipment needs (separate items with ';'): ");
-        String equipment = scanner.nextLine();
-        System.out.print("Special instructions: ");
-        String instructions = scanner.nextLine();
+        view.ConsoleView.print("Equipment needs (separate items with ';'): ");
+        String equipment = view.ConsoleView.readLine(scanner);
+        view.ConsoleView.print("Special instructions: ");
+        String instructions = view.ConsoleView.readLine(scanner);
 
         Event event;
         try {
@@ -81,19 +83,19 @@ public class AdvancedEventCreationService {
                     .withSpecialInstructions(instructions)
                     .build();
         } catch (IllegalArgumentException e) {
-            System.out.println("Event not created: " + e.getMessage());
+            view.ConsoleView.println("Event not created: " + e.getMessage());
             return;
         }
 
         showSummary(event);
-        System.out.print("\nSave this event? (yes/no): ");
-        if (!scanner.nextLine().trim().equalsIgnoreCase("yes")) {
-            System.out.println("Cancelled. Nothing was saved.");
+        view.ConsoleView.print("\nSave this event? (yes/no): ");
+        if (!view.ConsoleView.readLine(scanner).trim().equalsIgnoreCase("yes")) {
+            view.ConsoleView.println("Cancelled. Nothing was saved.");
             return;
         }
 
         if (submitNewEvent(event)) {
-            System.out.println("Advanced event created with PENDING status and submitted for approval.");
+            view.ConsoleView.println("Advanced event created with PENDING status and submitted for approval.");
         }
     }
 
@@ -104,28 +106,36 @@ public class AdvancedEventCreationService {
      */
     public boolean submitNewEvent(Event event) {
         if (eventFileHandler.eventExists(event.getEventId())) {
-            System.out.println("Event ID already exists. Event not saved.");
+            view.ConsoleView.println("Event ID already exists. Event not saved.");
             return false;
         }
         if (approvalFileHandler.approvalExists(event.getEventId())) {
-            System.out.println("An approval record already exists for this ID. Event not saved.");
+            view.ConsoleView.println("An approval record already exists for this ID. Event not saved.");
             return false;
         }
         String firstApprover = userFileHandler.findUsernameByRole("FACULTY");
         if (firstApprover == null) {
-            System.out.println("No Faculty approver is configured. Event not saved.");
+            view.ConsoleView.println("No Faculty approver is configured. Event not saved.");
             return false;
         }
 
         event.setStatus("PENDING");   // lifecycle always restarts at PENDING
 
-        if (!eventFileHandler.saveEvent(event)) return false;
-        detailsFileHandler.saveDetails(event.getEventId(), event.getSpecification());
-        return approvalFileHandler.createInitialApproval(event, firstApprover);
+        try (CsvTransaction tx = new CsvTransaction("data/events.csv", "data/event_details.csv", "data/approvals.csv")) {
+            if (!eventFileHandler.saveEvent(event)) return false;
+            if (!detailsFileHandler.saveDetails(event.getEventId(), event.getSpecification())) return false;
+            if (!approvalFileHandler.createInitialApproval(event, firstApprover)) return false;
+            tx.commit();
+            new mediator.UniversityEventCoordinator().eventCreated(event.getEventId());   // Mediator signal
+            return true;
+        } catch (IOException ex) {
+            view.ConsoleView.println("Could not save all event records: " + ex.getMessage());
+            return false;
+        }
     }
 
     public void showSummary(Event event) {
-        System.out.println("\n========== EVENT SUMMARY ==========");
+        view.ConsoleView.println("\n========== EVENT SUMMARY ==========");
         event.displayDetails();
         event.getSpecification().display();
     }
@@ -139,27 +149,27 @@ public class AdvancedEventCreationService {
 
     private double readNonNegativeDouble(Scanner scanner, String prompt) {
         while (true) {
-            System.out.print(prompt);
-            String text = scanner.nextLine().trim();
+            view.ConsoleView.print(prompt);
+            String text = view.ConsoleView.readLine(scanner).trim();
             if (text.isEmpty()) return 0;
             try {
                 double value = Double.parseDouble(text);
                 if (value >= 0 && !Double.isNaN(value) && !Double.isInfinite(value)) return value;
             } catch (NumberFormatException ignored) { }
-            System.out.println("Enter a non-negative number, or press Enter to skip.");
+            view.ConsoleView.println("Enter a non-negative number, or press Enter to skip.");
         }
     }
 
     private int readNonNegativeInt(Scanner scanner, String prompt) {
         while (true) {
-            System.out.print(prompt);
-            String text = scanner.nextLine().trim();
+            view.ConsoleView.print(prompt);
+            String text = view.ConsoleView.readLine(scanner).trim();
             if (text.isEmpty()) return 0;
             try {
                 int value = Integer.parseInt(text);
                 if (value >= 0) return value;
             } catch (NumberFormatException ignored) { }
-            System.out.println("Enter a non-negative whole number, or press Enter to skip.");
+            view.ConsoleView.println("Enter a non-negative whole number, or press Enter to skip.");
         }
     }
 }

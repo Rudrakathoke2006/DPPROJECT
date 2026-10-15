@@ -8,12 +8,12 @@ public class SMSNotificationSender
             String recipient,
             String message) {
 
-        System.out.println(
+        view.ConsoleView.println(
                 "[SMS] To: "
                         + recipient
         );
 
-        System.out.println(
+        view.ConsoleView.println(
                 "Message: "
                         + message
         );

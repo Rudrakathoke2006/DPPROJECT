@@ -8,12 +8,12 @@ public class InAppNotificationSender
             String recipient,
             String message) {
 
-        System.out.println(
+        view.ConsoleView.println(
                 "[IN-APP] User: "
                         + recipient
         );
 
-        System.out.println(
+        view.ConsoleView.println(
                 "Message: "
                         + message
         );

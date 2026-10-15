@@ -9,7 +9,7 @@ public class WorkshopEquipment implements Equipment {
 
     @Override
     public void displayDetails() {
-        System.out.println(
+        view.ConsoleView.println(
                 "Equipment: Projector and Training Equipment"
         );
     }

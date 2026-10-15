@@ -1,3 +1,5 @@
 eventId,description,budget,capacity,durationHours,equipment,specialInstructions
-E301,24-hour coding and robotics contest,25000.0,150,24,Projector;High-speed WiFi;Laptops,Bring college ID card
-E302,24-hour coding and robotics contest,25000.0,150,24,Projector;High-speed WiFi;Laptops,None
+EVT101,Student hackathon featuring robotics challenges,50000,250,24,Projector;WiFi;Laptops,Bring university ID
+EVT102,Music dance and cultural performances,30000,450,5,Sound;Lights;Stage,Participants report one hour early
+EVT103,Intercollege football tournament,20000,300,6,Scoreboard;First aid;Sports equipment,Team registration required
+EVT104,Hands-on introduction to cloud platforms,12000,150,3,Projector;WiFi;Computers,Bring a laptop if available

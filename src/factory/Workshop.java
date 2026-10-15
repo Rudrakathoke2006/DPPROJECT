@@ -23,7 +23,7 @@ public class Workshop extends Event {
     @Override
     public void conductEvent() {
 
-        System.out.println(
+        view.ConsoleView.println(
                 "Conducting workshop with "
                         + "training and instructional facilities."
         );

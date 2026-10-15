@@ -7,6 +7,8 @@ import filehandling.RegistrationFileHandler;
 import filehandling.ResourceFileHandler;
 import proxy.AuthenticationManager;
 import proxy.EventService;
+import mediator.EventCoordinator;
+import mediator.UniversityEventCoordinator;
 import proxy.EventServiceProxy;
 
 public class FestManagementSystem {
@@ -20,12 +22,14 @@ public class FestManagementSystem {
     private final ResourceFileHandler resourceFileHandler;
     private final RegistrationFileHandler registrationFileHandler;
     private final NotificationFileHandler notificationFileHandler;
+    private final EventCoordinator eventCoordinator;
 
     private FestManagementSystem() {
         authenticationManager = new AuthenticationManager();
         eventService = new EventServiceProxy();
         eventFileHandler = new EventFileHandler();
-        approvalManager = new ApprovalManager();
+        eventCoordinator = new UniversityEventCoordinator();   // Mediator
+        approvalManager = new ApprovalManager(eventCoordinator);
         resourceFileHandler = new ResourceFileHandler();
         registrationFileHandler = new RegistrationFileHandler();
         notificationFileHandler = new NotificationFileHandler();
@@ -45,4 +49,5 @@ public class FestManagementSystem {
     public ResourceFileHandler getResourceFileHandler() { return resourceFileHandler; }
     public RegistrationFileHandler getRegistrationFileHandler() { return registrationFileHandler; }
     public NotificationFileHandler getNotificationFileHandler() { return notificationFileHandler; }
+    public EventCoordinator getEventCoordinator() { return eventCoordinator; }
 }
