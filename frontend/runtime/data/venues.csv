@@ -1,0 +1,7 @@
+venueId,name,capacity,cost,equipment,unavailableDates
+V01,Innovation Lab,90,2500,projector;wifi;computers,
+V02,Main Auditorium,500,15000,projector;wifi;audio;stage,
+V03,Seminar Hall,180,5000,projector;wifi;audio,
+V04,Sports Complex,400,9000,scoreboard;audio;first aid,
+V05,Conference Room,120,3500,projector;wifi;whiteboard,
+V06,Open Air Theatre,600,12000,stage;audio;lighting,

@@ -1,0 +1,47 @@
+"""Run against a RESET disposable runtime, never production. Python standard library only."""
+import sys, pathlib, urllib.parse
+exec((pathlib.Path(__file__).resolve().parents[1]/'frontend/verify_http.py').read_text(encoding='utf-8').split("faculty = Client")[0])
+faculty=Client('rahul','rahul123')
+check('Good things are happening' in faculty.text,'Faculty login after reset')
+for page in ['dashboard','events','calendar','approvals','registrations','resources','notifications','activity','create']:
+ faculty.get('page='+page); check(faculty.status==200,'Empty JSP '+page)
+check('EVT101' not in faculty.get('page=events'),'Sample events absent after reset')
+fields=dict(id='FINALQA',name='Final <Campus> event',type='1',level='UNIVERSITY',date='2027-12-22',venue='Innovation Lab',description='Workflow',budget='16000',capacity='50',duration='3',equipment='',instructions='Bring ID')
+faculty.post(action='create',**fields);check('Your event is created' in faculty.text,'Create and persist Builder event')
+check('Final &lt;Campus&gt; event' in faculty.text,'Event cards render encoded name and valid ID')
+faculty.post(action='create',**fields);check('Could not save' in faculty.text,'Duplicate ID rejected')
+faculty.post(action='edit',**dict(fields,name='Revised event'));check('Changes saved.' in faculty.text,'Memento edit')
+faculty.post(action='undo',id='FINALQA');check('last edit was restored' in faculty.text,'Memento undo')
+faculty.post(action='clone',id='FINALQA',newId='FINALCLONE',name='Clone',date='2027-12-22',venue='Hall');check('Event duplicated' in faculty.text,'Prototype clone')
+for username,password in [('rahul','rahul123'),('priya','priya123'),('anjali','anjali123')]:
+ approver=Client(username,password)
+ for eid in ['FINALQA','FINALCLONE']:
+  approver.post(action='approve',id=eid,decision='yes');check('Decision saved.' in approver.text,'Approval '+username+' '+eid)
+faculty.get('page=resources');check(all(x in faculty.text for x in ['Capacity First','Budget First','Equipment First']),'Three strategy dropdown options')
+def recommendation(strategy,**overrides):
+ args=dict(action='recommend',id='FINALQA',attendees='50',budget='16000',equipment='',strategy=strategy);args.update(overrides)
+ return faculty.get(urllib.parse.urlencode(args))
+for strategy,expected in [('1','V06'),('2','V01'),('3','V02')]:
+ result=recommendation(strategy);check(result.startswith(expected+'\t') and 'Meets capacity' in result,'Strategy '+strategy+' recommendation and reason')
+check('No eligible venue' in recommendation('1',attendees='9999'),'Capacity excludes unsuitable venues')
+check('No eligible venue' in recommendation('2',budget='1'),'Budget excludes unsuitable venues')
+check('No eligible venue' in recommendation('3',equipment='nonexistent'),'Equipment excludes unsuitable venues')
+faculty.get('page=resources')
+faculty.post(action='allocateVenue',id='FINALQA',venueId='V05',attendees='50',budget='16000',equipment='',strategy='2');check('Selected venue, equipment and support staff allocated.' in faculty.text,'Manual override through Strategy and Abstract Factory')
+check(recommendation('2',id='FINALCLONE',attendees='100',equipment='projector;wifi').startswith('V03\t'),'Same-date booking excluded')
+faculty.get('page=resources')
+faculty.post(action='allocateVenue',id='FINALCLONE',venueId='V05',attendees='50',budget='16000',equipment='',strategy='2');check('already booked' in faculty.text,'Booking conflict rejected at commit')
+faculty.post(action='allocateVenue',id='FINALCLONE',venueId='V02',attendees='50',budget='16000',equipment='',strategy='3');check('Selected venue, equipment and support staff allocated.' in faculty.text,'Equipment strategy allocation')
+faculty.post(action='prepare',id='FINALQA');check('Preparation report' in faculty.text,'Template preparation')
+student=Client('aarav','aarav123')
+student.post(action='register',id='FINALQA',channel='INAPP');check('registration is confirmed' in student.text,'Student registration')
+student.post(action='register',id='FINALQA',channel='INAPP');check('already registered' in student.text,'Duplicate registration rejected')
+faculty.post(action='publish',id='FINALQA',message='Final workflow notice');check('Update published to 1 registered student' in faculty.text,'Observer Bridge Mediator notification')
+student.get('page=notifications');check('Final workflow notice' in student.text,'Notification persisted and visible')
+student.get('page=create');check(student.status==403,'Student role guard')
+faculty.post(action='create',csrf='wrong');check(faculty.status==403,'CSRF guard')
+for page in ['dashboard','events','calendar','approvals','registrations','resources','notifications','activity','create','event&id=FINALQA','edit&id=FINALQA','clone&id=FINALQA']:
+ faculty.get('page='+page);check(faculty.status==200,'Populated JSP '+page)
+admin=Client('admin','admin123');check('Administrator' in admin.text,'Admin login')
+admin.post(action='logout');check('Welcome back.' in admin.text,'Logout')
+print(str(checks)+' workflow checks passed')

@@ -1,0 +1,6 @@
+eventId,eventName,eventType,eventLevel,organizer,date,venue,status
+EVT101,AI and Robotics Hackathon,TECHNICAL,UNIVERSITY,Dr Rahul Mehta,15-11-2026,Main Auditorium,APPROVED
+EVT102,Cultural Unity Evening,CULTURAL,INTER_DEPARTMENT,Dr Rahul Mehta,21-11-2026,Open Air Theatre,APPROVED
+EVT103,Intercollege Football Cup,SPORTS,DEPARTMENT,Dr Rahul Mehta,28-11-2026,Sports Complex,APPROVED
+EVT104,Cloud Computing Workshop,WORKSHOP,DEPARTMENT,Dr Rahul Mehta,05-12-2026,Seminar Hall,APPROVED
+EVT900,Campus Innovation and AI Summit,TECHNICAL,UNIVERSITY,Dr Rahul Mehta,20-11-2026,DT Seminar Hall,APPROVED

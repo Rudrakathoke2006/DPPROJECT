@@ -13,3 +13,24 @@ const calendar=document.getElementById('calendar-grid');
 if(calendar){const entries=Array.from(document.querySelectorAll('#calendar-events a'));const today=new Date();let month=today.getMonth(),year=today.getFullYear();function render(){calendar.replaceChildren();document.getElementById('calendar-title').textContent=new Date(year,month).toLocaleDateString('en-GB',{month:'long',year:'numeric'});const offset=(new Date(year,month,1).getDay()+6)%7;const days=new Date(year,month+1,0).getDate();const count=Math.ceil((offset+days)/7)*7;for(let i=0;i<count;i++){const date=new Date(year,month,i-offset+1);const iso=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;const cell=document.createElement('div');cell.className='calendar-day';if(date.getMonth()!==month)cell.classList.add('outside');if(date.toDateString()===today.toDateString())cell.classList.add('is-today');const number=document.createElement('span');number.className='day-number';number.textContent=date.getDate();cell.append(number);for(const entry of entries.filter(e=>e.dataset.date===iso)){const link=entry.cloneNode(true);link.className=entry.dataset.type;cell.append(link);}calendar.append(cell);}}function shift(n){const date=new Date(year,month+n,1);year=date.getFullYear();month=date.getMonth();render();}document.getElementById('calendar-prev').addEventListener('click',()=>shift(-1));document.getElementById('calendar-next').addEventListener('click',()=>shift(1));document.getElementById('calendar-today').addEventListener('click',()=>{year=today.getFullYear();month=today.getMonth();render();});render();}
 
 document.querySelectorAll('[data-venue]').forEach(button=>button.addEventListener('click',()=>{const select=document.getElementById('selected-venue');document.getElementById('allocation-panel').scrollIntoView({behavior:'smooth',block:'start'});if(select){select.value=button.dataset.venue;document.querySelectorAll('[data-venue]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));select.focus({preventScroll:true});}}));
+
+const allocationForm=document.getElementById('allocation-form');
+if(allocationForm){
+ let sequence=0, recommended='', manual=false;
+ const venue=allocationForm.elements.venueId, status=document.getElementById('venue-recommendation'), use=document.getElementById('use-recommendation');
+ venue.addEventListener('change',()=>{manual=true;});
+ document.querySelectorAll('[data-venue]').forEach(button=>button.addEventListener('click',()=>{manual=true;}));
+ use.addEventListener('click',()=>{venue.value=recommended;manual=false;});
+ async function recommend(){
+  const current=++sequence; use.hidden=true;
+  const fields=allocationForm.elements;
+  if(!fields.id.value||!fields.attendees.value||!fields.budget.value){status.textContent='Select an event and enter requirements for a recommendation.';return;}
+  const query=new URLSearchParams({action:'recommend',id:fields.id.value,attendees:fields.attendees.value,budget:fields.budget.value,equipment:fields.equipment.value,strategy:fields.strategy.value});
+  try{const response=await fetch('app?'+query);const text=await response.text();if(current!==sequence)return;
+   const parts=text.split('\t');recommended=response.ok&&parts.length===2?parts[0]:'';
+   status.textContent=recommended?'Recommended: '+parts[1]:text;use.hidden=!recommended;
+   if(!manual)venue.value=recommended;
+  }catch(error){if(current===sequence)status.textContent='Recommendation unavailable. Please try again.';}
+ }
+ ['id','attendees','budget','equipment','strategy'].forEach(name=>allocationForm.elements[name].addEventListener('input',()=>{if(name==='strategy'||name==='id')manual=false;recommend();}));
+}

@@ -17,6 +17,11 @@ public final class Launcher {
         context.addServletMappingDecoded("/app", "campus");
         context.setSessionTimeout(30);
         server.start();
+        if (!server.getConnector().getState().isAvailable()) {
+            server.stop(); server.destroy();
+            throw new IllegalStateException("HTTP connector failed to start. Check port availability and local network permissions.");
+        }
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> { try { server.stop(); server.destroy(); } catch (Exception ignored) { } }));
         System.out.println("Campus & Co. is ready: http://localhost:" + server.getConnector().getPort() + "/app");
         server.getServer().await();
     }

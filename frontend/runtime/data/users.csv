@@ -1,0 +1,7 @@
+userId,name,username,password,role
+S101,Aarav Sharma,aarav,aarav123,STUDENT
+S102,Meera Shah,meera,meera123,STUDENT
+F101,Dr Rahul Mehta,rahul,rahul123,FACULTY
+H101,Dr Priya Rao,priya,priya123,HOD
+D101,Dr Anjali Verma,anjali,anjali123,DEAN
+A101,System Administrator,admin,admin123,ADMIN

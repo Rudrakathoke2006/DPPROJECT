@@ -1,5 +1,8 @@
 $ErrorActionPreference = 'Stop'
-Set-Location $PSScriptRoot
+. "$PSScriptRoot/../runtime-common.ps1"
+$jdk = Find-CampusJdk
+Push-Location $PSScriptRoot
+try {
 New-Item -ItemType Directory -Force lib, target/classes | Out-Null
 $artifacts = @(
     @('org/apache/tomcat/embed','tomcat-embed-core','10.1.60'),
@@ -17,6 +20,8 @@ foreach ($artifact in $artifacts) {
 }
 $sources = Get-ChildItem ../src, src/main/java -Recurse -Filter *.java | ForEach-Object { '"' + $_.FullName.Replace('\','/') + '"' }
 [IO.File]::WriteAllLines("$PSScriptRoot/target/sources.txt", $sources, [Text.UTF8Encoding]::new($false))
-& javac -encoding UTF-8 --release 17 -cp 'lib/*' -d target/classes '@target/sources.txt'
+& "$jdk/bin/javac.exe" -encoding UTF-8 --release 17 -cp 'lib/*' -d target/classes '@target/sources.txt'
 if ($LASTEXITCODE -ne 0) { throw 'Java compilation failed.' }
 Write-Host 'Build complete. Run .\run.ps1 to start Campus & Co.'
+
+} finally { Pop-Location }

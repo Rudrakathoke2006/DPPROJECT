@@ -1,0 +1,6 @@
+eventId,eventName,eventType,eventLevel,approverUsername,approverRole,status,remarks
+EVT101,AI and Robotics Hackathon,TECHNICAL,UNIVERSITY,anjali,DEAN,APPROVED,Final approval granted by Dean for University-level event.
+EVT102,Cultural Unity Evening,CULTURAL,INTER_DEPARTMENT,priya,HOD,APPROVED,Final approval granted by HOD for Inter-Department-level event.
+EVT103,Intercollege Football Cup,SPORTS,DEPARTMENT,rahul,FACULTY,APPROVED,Final approval granted by Faculty for Department-level event.
+EVT104,Cloud Computing Workshop,WORKSHOP,DEPARTMENT,rahul,FACULTY,APPROVED,Final approval granted by Faculty for Department-level event.
+EVT900,Campus Innovation and AI Summit,TECHNICAL,UNIVERSITY,anjali,DEAN,APPROVED,Final approval granted by Dean for University-level event.

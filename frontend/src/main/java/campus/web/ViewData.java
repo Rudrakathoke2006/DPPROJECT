@@ -14,12 +14,15 @@ public final class ViewData {
         List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
         List<Map<String,String>> result = new ArrayList<>();
         if (lines.isEmpty()) return result;
-        String[] headers = lines.get(0).split(",", -1);
+        String[] headers = lines.get(0).replace("\uFEFF", "").trim().split(",", -1);
+        for (int j=0; j<headers.length; j++) headers[j]=headers[j].trim();
+        if (file.equals("events") && !Arrays.asList(headers).containsAll(List.of("eventId","eventName","eventType","eventLevel","organizer","date","venue","status"))) throw new java.io.IOException("events.csv has missing required headers; restore the documented CSV schema.");
         for (int i = 1; i < lines.size(); i++) {
             if (lines.get(i).isBlank()) continue;
             String[] values = lines.get(i).split(",", -1);
             Map<String,String> row = new LinkedHashMap<>();
             for (int j=0; j<headers.length; j++) row.put(headers[j], j<values.length ? values[j] : "");
+            if (file.equals("events") && row.getOrDefault("eventId", "").isBlank()) throw new java.io.IOException("Missing event ID at events.csv line " + (i+1));
             result.add(row);
         }
         return result;
@@ -43,6 +46,6 @@ public final class ViewData {
     }
     public static String isoDate(String text) { LocalDate value=date(text); return value.equals(LocalDate.MAX)?"":value.toString(); }
     public static Map<String,String> find(List<Map<String,String>> rows, String key, String value) {
-        return rows.stream().filter(r -> value.equalsIgnoreCase(r.getOrDefault(key,""))).findFirst().orElse(new LinkedHashMap<>());
+        return rows.stream().filter(r -> value != null && value.equalsIgnoreCase(r.getOrDefault(key,""))).findFirst().orElse(new LinkedHashMap<>());
     }
 }

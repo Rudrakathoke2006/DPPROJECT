@@ -1,0 +1,521 @@
+Member1BuilderPrototypeTest
+PASS  B1 minimal build succeeds with defaults
+Event saved to events.csv
+Approval record saved.
+PASS  B2a advanced event saved
+PASS  B2b optional fields survive restart
+PASS  B2c saved as PENDING with 1 event row, 1 details row, 1 approval row
+PASS  B3a negative budget rejected
+PASS  B3b negative capacity rejected
+PASS  B3c empty name rejected
+PASS  B3d empty id rejected
+PASS  B3e bad date rejected
+PASS  B3f bad level rejected
+PASS  B3g no files changed by rejected builds
+PASS  B4 TECHNICAL built through its existing creator
+PASS  B4 CULTURAL built through its existing creator
+PASS  B4 SPORTS built through its existing creator
+PASS  B4 WORKSHOP built through its existing creator
+Event saved to events.csv
+Approval record saved.
+PASS  P1 clone has different ID and keeps concrete type
+PASS  P2a template fields copied
+PASS  P2b special instructions NOT copied
+PASS  P3 clone starts PENDING although source APPROVED
+Event saved to events.csv
+Approval record saved.
+PASS  P4a clone saved
+PASS  P4b source row untouched and still APPROVED
+PASS  P4c one new approval row, no registration/resource/notification rows
+PASS  P4d clone details persisted separately from source
+PASS  P5 editing clone does not modify source
+PASS  P6 clone PENDING even if source REJECTED; name/venue overrides applied
+PASS  P7a duplicate destination ID blocked in prepareClone
+Event ID already exists. Event not saved.
+PASS  P7b duplicate destination ID blocked in submit
+PASS  P7c missing source blocked
+
+Passed: 28   Failed: 0
+
+FullRegressionTest
+Event saved to events.csv
+Approval record saved.
+Event ID already exists. Event not saved.
+Event saved to events.csv
+Approval record saved.
+Access denied: only Faculty/Admin can edit, undo, or view event history.
+Event ID to edit: Event ID: QA900 | Name: Before | Date: 10-11-2026 | Venue: Lab | Description: Not provided | Budget: 5000.0 | Capacity: 60 | Duration: 0 | Equipment: None | Instructions: None
+Enter new values (press Enter to keep current value).
+Name [Before]: Date [10-11-2026]: Proposed venue [Lab]: Description [Not provided]: Budget [5000.0]: Capacity [60]: Duration hours [0]: Equipment [None]: Special instructions [None]: Event updated successfully.
+Approval reset to PENDING and routed back to Faculty. Previous approvals remain documented in event history.
+Before:
+Event ID: QA900 | Name: Before | Date: 10-11-2026 | Venue: Lab | Description: Not provided | Budget: 5000.0 | Capacity: 60 | Duration: 0 | Equipment: None | Instructions: None
+After:
+Event ID: QA900 | Name: After | Date: 10-11-2026 | Venue: Lab | Description: Not provided | Budget: 5000.0 | Capacity: 60 | Duration: 0 | Equipment: None | Instructions: None
+Event ID to edit: Event ID: QA900 | Name: After | Date: 10-11-2026 | Venue: Lab | Description: Not provided | Budget: 5000.0 | Capacity: 60 | Duration: 0 | Equipment: None | Instructions: None
+Enter new values (press Enter to keep current value).
+Name [After]: Date [10-11-2026]: Proposed venue [Lab]: Description [Not provided]: Budget [5000.0]: Capacity [60]: Duration hours [0]: Equipment [None]: Special instructions [None]: Event updated successfully.
+Approval reset to PENDING and routed back to Faculty. Previous approvals remain documented in event history.
+Before:
+Event ID: QA900 | Name: After | Date: 10-11-2026 | Venue: Lab | Description: Not provided | Budget: 5000.0 | Capacity: 60 | Duration: 0 | Equipment: None | Instructions: None
+After:
+Event ID: QA900 | Name: Again | Date: 10-11-2026 | Venue: Lab | Description: Not provided | Budget: 5000.0 | Capacity: 60 | Duration: 0 | Equipment: None | Instructions: None
+Event ID to undo: Undo complete. Restored editable metadata only; registrations and approval decisions were not restored.
+Before undo:
+Event ID: QA900 | Name: Again | Date: 10-11-2026 | Venue: Lab | Description: Not provided | Budget: 5000.0 | Capacity: 60 | Duration: 0 | Equipment: None | Instructions: None
+After undo:
+Event ID: QA900 | Name: After | Date: 10-11-2026 | Venue: Lab | Description: Not provided | Budget: 5000.0 | Capacity: 60 | Duration: 0 | Equipment: None | Instructions: None
+Reapproval required: YES, status is PENDING and Faculty routing reopened.
+Event ID to undo: Undo complete. Restored editable metadata only; registrations and approval decisions were not restored.
+Before undo:
+Event ID: QA900 | Name: After | Date: 10-11-2026 | Venue: Lab | Description: Not provided | Budget: 5000.0 | Capacity: 60 | Duration: 0 | Equipment: None | Instructions: None
+After undo:
+Event ID: QA900 | Name: Before | Date: 10-11-2026 | Venue: Lab | Description: Not provided | Budget: 5000.0 | Capacity: 60 | Duration: 0 | Equipment: None | Instructions: None
+Reapproval required: YES, status is PENDING and Faculty routing reopened.
+Event ID to undo: No undo history for this event.
+FULL REGRESSION PASSED: 20 assertions
+
+MediatorRegressionTest
+
+1. Technical  2. Cultural  3. Sports  4. Workshop
+Event type choice: Event ID: Event Name: Date: Proposed Venue: Event Level: 1. Department  2. Inter-Department  3. University
+Event level choice: 
+Event created successfully!
+Event saved to events.csv
+Approval record saved.
+Event created with PENDING status and submitted for approval.
+
+1. Technical  2. Cultural  3. Sports  4. Workshop
+Event type choice: Event ID: Event Name: Date: Proposed Venue: Event Level: 1. Department  2. Inter-Department  3. University
+Event level choice: 
+Event created successfully!
+Event saved to events.csv
+Approval record saved.
+Event created with PENDING status and submitted for approval.
+
+1. Technical  2. Cultural  3. Sports  4. Workshop
+Event type choice: Event ID: Event Name: Date: Proposed Venue: Event Level: 1. Department  2. Inter-Department  3. University
+Event level choice: 
+Event created successfully!
+Event saved to events.csv
+Approval record saved.
+Event created with PENDING status and submitted for approval.
+
+Faculty approval required.
+Event ID   : M901
+Event Name : Med Tech
+Event Type : TECHNICAL
+Event Level: DEPARTMENT
+
+Approve this event? (yes/no): 
+Final approval granted by Faculty for Department-level event. Event status is now APPROVED.
+
+Faculty approval required.
+Event ID   : M902
+Event Name : Med Fest
+Event Type : CULTURAL
+Event Level: UNIVERSITY
+
+Approve this event? (yes/no): 
+Approved by Faculty; forwarded to HOD.
+
+Faculty approval required.
+Event ID   : M903
+Event Name : Med Cup
+Event Type : SPORTS
+Event Level: DEPARTMENT
+
+Approve this event? (yes/no): 
+Event rejected by FACULTY.
+
+HOD approval required.
+Event ID   : M902
+Event Name : Med Fest
+Event Type : CULTURAL
+Event Level: UNIVERSITY
+
+Approve this event? (yes/no): 
+Approved by HOD; forwarded to Dean.
+
+Dean approval required.
+Event ID   : M902
+Event Name : Med Fest
+Event Type : CULTURAL
+Event Level: UNIVERSITY
+
+Approve this event? (yes/no): 
+Final approval granted by Dean for University-level event. Event status is now APPROVED.
+
+========= APPROVED EVENTS =========
+
+Event ID   : M901
+Event Name : Med Tech
+Type       : TECHNICAL
+Level      : DEPARTMENT
+Organizer  : Dr Rahul Mehta
+Date       : 12-12-2026
+Venue      : Lab
+Status     : APPROVED
+
+Event ID   : M902
+Event Name : Med Fest
+Type       : CULTURAL
+Level      : UNIVERSITY
+Organizer  : Dr Rahul Mehta
+Date       : 13-12-2026
+Venue      : Hall
+Status     : APPROVED
+Enter approved Event ID: Resources can be allocated only to approved events.
+
+========= APPROVED EVENTS =========
+
+Event ID   : M901
+Event Name : Med Tech
+Type       : TECHNICAL
+Level      : DEPARTMENT
+Organizer  : Dr Rahul Mehta
+Date       : 12-12-2026
+Venue      : Lab
+Status     : APPROVED
+
+Event ID   : M902
+Event Name : Med Fest
+Type       : CULTURAL
+Level      : UNIVERSITY
+Organizer  : Dr Rahul Mehta
+Date       : 13-12-2026
+Venue      : Hall
+Status     : APPROVED
+Enter approved Event ID: Venue: Computer Laboratory
+Equipment: Computers and Projector
+Support Staff: Technical Support Team
+
+Resources saved successfully.
+
+========= APPROVED EVENTS =========
+
+Event ID   : M901
+Event Name : Med Tech
+Type       : TECHNICAL
+Level      : DEPARTMENT
+Organizer  : Dr Rahul Mehta
+Date       : 12-12-2026
+Venue      : Lab
+Status     : APPROVED
+
+Event ID   : M902
+Event Name : Med Fest
+Type       : CULTURAL
+Level      : UNIVERSITY
+Organizer  : Dr Rahul Mehta
+Date       : 13-12-2026
+Venue      : Hall
+Status     : APPROVED
+Enter approved Event ID: Resources already allocated.
+
+========= APPROVED EVENTS =========
+
+Event ID   : M901
+Event Name : Med Tech
+Type       : TECHNICAL
+Level      : DEPARTMENT
+Organizer  : Dr Rahul Mehta
+Date       : 12-12-2026
+Venue      : Lab
+Status     : APPROVED
+
+Event ID   : M902
+Event Name : Med Fest
+Type       : CULTURAL
+Level      : UNIVERSITY
+Organizer  : Dr Rahul Mehta
+Date       : 13-12-2026
+Venue      : Hall
+Status     : APPROVED
+Enter Event ID: Notification channel (EMAIL/SMS/INAPP): Registration successful. Registration ID: R001
+
+========= APPROVED EVENTS =========
+
+Event ID   : M901
+Event Name : Med Tech
+Type       : TECHNICAL
+Level      : DEPARTMENT
+Organizer  : Dr Rahul Mehta
+Date       : 12-12-2026
+Venue      : Lab
+Status     : APPROVED
+
+Event ID   : M902
+Event Name : Med Fest
+Type       : CULTURAL
+Level      : UNIVERSITY
+Organizer  : Dr Rahul Mehta
+Date       : 13-12-2026
+Venue      : Hall
+Status     : APPROVED
+Enter Event ID: Notification channel (EMAIL/SMS/INAPP): Student is already registered for this event.
+
+========= APPROVED EVENTS =========
+
+Event ID   : M901
+Event Name : Med Tech
+Type       : TECHNICAL
+Level      : DEPARTMENT
+Organizer  : Dr Rahul Mehta
+Date       : 12-12-2026
+Venue      : Lab
+Status     : APPROVED
+
+Event ID   : M902
+Event Name : Med Fest
+Type       : CULTURAL
+Level      : UNIVERSITY
+Organizer  : Dr Rahul Mehta
+Date       : 13-12-2026
+Venue      : Hall
+Status     : APPROVED
+Enter Event ID: Notification channel (EMAIL/SMS/INAPP): Registration successful. Registration ID: R002
+
+========= APPROVED EVENTS =========
+
+Event ID   : M901
+Event Name : Med Tech
+Type       : TECHNICAL
+Level      : DEPARTMENT
+Organizer  : Dr Rahul Mehta
+Date       : 12-12-2026
+Venue      : Lab
+Status     : APPROVED
+
+Event ID   : M902
+Event Name : Med Fest
+Type       : CULTURAL
+Level      : UNIVERSITY
+Organizer  : Dr Rahul Mehta
+Date       : 13-12-2026
+Venue      : Hall
+Status     : APPROVED
+Enter approved Event ID: Update message: Observer registered successfully.
+Observer registered successfully.
+[EMAIL] To: aarav
+Message: UNIVERSITY EVENT UPDATE
+----------------------
+Event: Med Tech (M901)
+Bring ID
+[SMS] To: meera
+Message: UNIVERSITY EVENT UPDATE
+----------------------
+Event: Med Tech (M901)
+Bring ID
+Observers notified: 2
+
+========= APPROVED EVENTS =========
+
+Event ID   : M901
+Event Name : Med Tech
+Type       : TECHNICAL
+Level      : DEPARTMENT
+Organizer  : Dr Rahul Mehta
+Date       : 12-12-2026
+Venue      : Lab
+Status     : APPROVED
+
+Event ID   : M902
+Event Name : Med Fest
+Type       : CULTURAL
+Level      : UNIVERSITY
+Organizer  : Dr Rahul Mehta
+Date       : 13-12-2026
+Venue      : Hall
+Status     : APPROVED
+Enter approved Event ID: Update message: No registered students to notify.
+Observers notified: 0
+
+========= APPROVED EVENTS =========
+
+Event ID   : M901
+Event Name : Med Tech
+Type       : TECHNICAL
+Level      : DEPARTMENT
+Organizer  : Dr Rahul Mehta
+Date       : 12-12-2026
+Venue      : Lab
+Status     : APPROVED
+
+Event ID   : M902
+Event Name : Med Fest
+Type       : CULTURAL
+Level      : UNIVERSITY
+Organizer  : Dr Rahul Mehta
+Date       : 13-12-2026
+Venue      : Hall
+Status     : APPROVED
+Enter approved Event ID: Updates can be published only for approved events.
+
+[REAL SERVICE] Coordination status access granted to Aarav.
+Event ID (leave blank for all approved events): 
+========= EVENT COORDINATION STATUS (Mediator) =========
+No approved event found with that ID.
+
+[REAL SERVICE] Coordination status access granted to Dr Rahul Mehta.
+Event ID (leave blank for all events): 
+========= EVENT COORDINATION STATUS (Mediator) =========
+
+Event ID        : M901 (Med Tech)
+Type / Level    : TECHNICAL / DEPARTMENT
+Event status    : APPROVED
+Approval        : Final decision: APPROVED by FACULTY
+Allocation      : Computer Laboratory
+Registrations   : 2
+Notifications   : 2
+Workflow state  : ALLOCATED - open with 2 registration(s)
+Latest activity : 2026-10-15 01:38:29 | eventUpdated -> NOTIFIED (2 registered student(s))
+
+Event ID        : M902 (Med Fest)
+Type / Level    : CULTURAL / UNIVERSITY
+Event status    : APPROVED
+Approval        : Final decision: APPROVED by DEAN
+Allocation      : NOT ALLOCATED
+Registrations   : 0
+Notifications   : 0
+Workflow state  : APPROVED - eligible for resource allocation
+Latest activity : 2026-10-15 01:38:29 | eventUpdated -> NO_RECIPIENTS (0 registered student(s))
+
+Event ID        : M903 (Med Cup)
+Type / Level    : SPORTS / DEPARTMENT
+Event status    : REJECTED
+Approval        : Final decision: REJECTED by FACULTY
+Allocation      : NOT ALLOCATED
+Registrations   : 0
+Notifications   : 0
+Workflow state  : CLOSED - rejected
+Latest activity : 2026-10-15 01:38:29 | approvalFinalized -> IGNORED (signal APPROVED does not match events.csv status REJECTED)
+MEDIATOR REGRESSION PASSED: 31 assertions
+
+StrategyIntegrationTest
+Strategy integration tests PASSED
+
+StrategyConsoleRegressionTest
+Event saved to events.csv
+Approval record saved.
+Only approved events can receive final venue allocations.
+Expected attendees (positive integer): Maximum venue booking budget: Mandatory equipment (semicolon-separated, blank for none): 1. Capacity First  2. Budget First  3. Equipment First
+Choose ranking strategy: 
+Ranking: Budget First
+Excluded Innovation Lab: insufficient capacity
+Excluded Sports Complex: missing mandatory equipment
+Excluded Open Air Theatre: missing mandatory equipment
+1. V05 | Conference Room | seats=120 | cost=3500.0 | equipment=[projector, wifi, whiteboard] | minimizes booking cost (12500.0 budget remaining)
+2. V03 | Seminar Hall | seats=180 | cost=5000.0 | equipment=[projector, wifi, audio] | minimizes booking cost (11000.0 budget remaining)
+3. V02 | Main Auditorium | seats=500 | cost=15000.0 | equipment=[projector, wifi, audio, stage] | minimizes booking cost (1000.0 budget remaining)
+Recommended: Conference Room
+Choose ranked venue number (0 cancels): Cancelled; nothing allocated.
+Expected attendees (positive integer): Maximum venue booking budget: Mandatory equipment (semicolon-separated, blank for none): 1. Capacity First  2. Budget First  3. Equipment First
+Choose ranking strategy: 
+Ranking: Budget First
+Excluded Innovation Lab: insufficient capacity
+Excluded Sports Complex: missing mandatory equipment
+Excluded Open Air Theatre: missing mandatory equipment
+1. V05 | Conference Room | seats=120 | cost=3500.0 | equipment=[projector, wifi, whiteboard] | minimizes booking cost (12500.0 budget remaining)
+2. V03 | Seminar Hall | seats=180 | cost=5000.0 | equipment=[projector, wifi, audio] | minimizes booking cost (11000.0 budget remaining)
+3. V02 | Main Auditorium | seats=500 | cost=15000.0 | equipment=[projector, wifi, audio, stage] | minimizes booking cost (1000.0 budget remaining)
+Recommended: Conference Room
+Choose ranked venue number (0 cancels): 
+Resources saved successfully.
+Venue allocated using Strategy + existing Abstract Factory. Proposed venue remains unchanged.
+Event ID to edit: Cannot edit an event with allocated resources. Contact administrator to release allocation first.
+STRATEGY CONSOLE REGRESSION PASSED
+
+WebDataRegressionTest
+Web CSV BOM, whitespace, missing ID and save validation PASSED
+
+
+================================================
+ SMART UNIVERSITY EVENT & FEST MANAGEMENT SYSTEM
+================================================
+1. Login
+0. Exit Application
+Enter choice: Username: Password: 
+Login successful!
+Welcome, Dr Rahul Mehta
+Role: FACULTY
+
+---------------- FACULTY MENU ----------------
+1. View all events
+2. Create event
+3. Process pending approvals
+4. Allocate resources to approved event
+5. Publish event update
+6. Create advanced event (Builder)
+7. Duplicate existing event (Prototype)
+8. Edit event (Memento)
+9. Undo last event edit (Memento)
+10. View event edit history
+11. Smart Venue Selection (Strategy)
+12. Run Event Preparation (Template Method)
+13. View Event Coordination Status (Mediator)
+0. Logout
+Enter choice: 
+[REAL SERVICE] Displaying events for Dr Rahul Mehta...
+
+========= ALL EVENTS =========
+
+Event ID   : EVT101
+Event Name : AI and Robotics Hackathon
+Type       : TECHNICAL
+Level      : UNIVERSITY
+Organizer  : Dr Rahul Mehta
+Date       : 15-11-2026
+Venue      : Main Auditorium
+Status     : APPROVED
+
+Event ID   : EVT102
+Event Name : Cultural Unity Evening
+Type       : CULTURAL
+Level      : INTER_DEPARTMENT
+Organizer  : Dr Rahul Mehta
+Date       : 21-11-2026
+Venue      : Open Air Theatre
+Status     : APPROVED
+
+Event ID   : EVT103
+Event Name : Intercollege Football Cup
+Type       : SPORTS
+Level      : DEPARTMENT
+Organizer  : Dr Rahul Mehta
+Date       : 28-11-2026
+Venue      : Sports Complex
+Status     : PENDING
+
+Event ID   : EVT104
+Event Name : Cloud Computing Workshop
+Type       : WORKSHOP
+Level      : DEPARTMENT
+Organizer  : Dr Rahul Mehta
+Date       : 05-12-2026
+Venue      : Seminar Hall
+Status     : APPROVED
+
+---------------- FACULTY MENU ----------------
+1. View all events
+2. Create event
+3. Process pending approvals
+4. Allocate resources to approved event
+5. Publish event update
+6. Create advanced event (Builder)
+7. Duplicate existing event (Prototype)
+8. Edit event (Memento)
+9. Undo last event edit (Memento)
+10. View event edit history
+11. Smart Venue Selection (Strategy)
+12. Run Event Preparation (Template Method)
+13. View Event Coordination Status (Mediator)
+0. Logout
+Enter choice: Logged out successfully. Returning to main menu...
+
+================================================
+ SMART UNIVERSITY EVENT & FEST MANAGEMENT SYSTEM
+================================================
+1. Login
+0. Exit Application
+Enter choice: Application closed. Thank you.

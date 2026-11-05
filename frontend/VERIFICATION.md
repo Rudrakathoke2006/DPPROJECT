@@ -1,14 +1,27 @@
-# Verification results
+# Verification — 15 October 2026
 
-- All 37 HTTP integration checks passed on 12 October 2026.
-- Every JSP view rendered successfully on embedded Tomcat 10.1.60.
-- Verified login, invalid credentials, logout, create, duplicate ID rejection, edit, undo, clone, Faculty/HOD/Dean approval routing, allocation, preparation reports, registration, duplicate prevention, notifications, CSRF and role restrictions.
-- Desktop and mobile layouts inspected in the browser. Event-category filtering and calendar month navigation worked; no JavaScript console errors were observed.
-- SHA-256 verification: all 260 original files match the supplied ZIP byte-for-byte, including all 120 original Java source files.
-- Test actions used isolated frontend/qa-* data directories; those directories are excluded from the delivery.
-- The package includes original project files, new frontend source, compiled classes and dependency JARs. It excludes test runtime files and machine-specific compiler argument lists.
+Executed on Windows with Oracle JDK 23.0.1, compiling all Java sources with `--release 17`, and embedded Tomcat 10.1.60.
 
-## Usability fixes — 12 October 2026
-- All 46 integration checks passed, including selected-venue allocation, insufficient-capacity rejection, mandatory notification choice, and persisted SMS preference.
-- Browser confirmed visible top-bar logout, scrollable sidebar, and three initially unselected required channel choices.
-- Existing runtime data preserved when restarting the live app.
+- Compilation: successful; only the existing Tomcat deprecated-API note.
+- Root PowerShell launcher: compiled and started the real JSP server successfully.
+- Six backend suites: Member1BuilderPrototypeTest, FullRegressionTest, MediatorRegressionTest, StrategyIntegrationTest, StrategyConsoleRegressionTest, WebDataRegressionTest — exit 0.
+- Console Main: real faculty login, view events, logout and exit passed.
+- 55 HTTP workflow assertions passed on an empty reset runtime, and passed again after a second complete reset.
+- Original sample-data suite: all 46 checks in frontend/verify_fixes.py passed.
+- Restart: event details/allocation and student notification visible after restart; all CSV SHA-256 values unchanged.
+- Reset: all eight event-dependent CSVs retained only headers; users.csv and venues.csv unchanged byte-for-byte; backup hashes exactly matched pre-reset data.
+- Post-reset restart: neither test events nor original samples returned; complete workflow succeeded again.
+- Live browser: faculty login; Resources form; 50 attendees, 16000 budget, no required equipment; Capacity First -> Open Air Theatre, Budget First -> Innovation Lab, Equipment First -> Main Auditorium. Recommendation explanations and automatic dropdown selection visibly changed. No JavaScript errors reported. Screenshot: strategy-browser.png.
+- HTTP eligibility checks: insufficient capacity/budget/equipment, same-date booking exclusion, allocation-time booking conflict, manual override, duplicate registration/ID, CSRF and role access.
+- All empty and populated JSP routes were requested, including event/edit/clone views.
+- CSV regression: UTF-8 BOM plus whitespace header maps to the actual event ID; missing IDs and invalid saves are rejected before URL encoding.
+
+Logs: backend-results.txt, workflow-results.txt, server-results.txt. Test writes were confined to disposable runtimes. Existing application data and CSS were preserved.
+
+The original ZIP had clean event headers, so the exact historical corrupt runtime file was unavailable. The parser defect was identified from code and exercised with a malformed-header fixture. No claim is made that unrelated malformed/corrupt CSV formats can be automatically repaired.
+
+Email and SMS remain the original simulated providers. The current browser check covers the Resources interaction and layout; it is not a comprehensive mobile/accessibility audit.
+
+## Fresh ZIP extraction smoke test
+
+The complete archive was extracted into a separate folder. Its root launcher compiled and started on port 8094, faculty login and five JSP pages passed, and event cards rendered correctly with an actual BOM/whitespace header fixture. Reset correctly refused the live runtime. After stopping it, reset completed and the extracted `powershell -File run.ps1 -Console` launcher passed login, viewing the empty events list, logout and exit. Console input was supplied to the PowerShell process stdin; piping text into a PowerShell script invocation does not forward that pipeline to Java and is not the supported console launch command.

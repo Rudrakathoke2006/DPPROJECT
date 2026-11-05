@@ -12,7 +12,7 @@ import controller.EventWorkflowController;
 import builder.*;
 import factory.EventCreatorProvider;
 
-/** HTTP controller and adapter only. Original backend source files are compiled unchanged. */
+/** HTTP controller and adapter only. Mutations delegate to the existing pattern services. */
 public final class CampusServlet extends HttpServlet {
     private static final Object BACKEND_LOCK = new Object();
     private static final Set<String> PAGES = Set.of("dashboard","events","calendar","approvals","registrations","resources","notifications","activity","event","create","edit","clone");
@@ -44,6 +44,16 @@ public final class CampusServlet extends HttpServlet {
         HttpSession session=request.getSession(); token(session);
         User user=(User)session.getAttribute("user");
         if(user==null) { request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request,response); return; }
+        if ("recommend".equals(request.getParameter("action"))) {
+            response.setContentType("text/plain;charset=UTF-8");
+            try {
+                allow(user,"FACULTY","ADMIN");
+                synchronized(BACKEND_LOCK) {
+                    response.getWriter().write(VenueAdapter.recommend(required(request,"id"), Integer.parseInt(required(request,"attendees")), Double.parseDouble(required(request,"budget")), input(request,"equipment"), required(request,"strategy")));
+                }
+            } catch (Exception ex) { response.setStatus(400); response.getWriter().write(Objects.toString(ex.getMessage(),"Cannot recommend a venue.")); }
+            return;
+        }
         String page=Objects.toString(request.getParameter("page"),"dashboard");
         if(!PAGES.contains(page)) { response.sendError(404); return; }
         if ((Set.of("create","edit").contains(page) && !role(user,"FACULTY","ADMIN")) || (page.equals("clone")&&!role(user,"FACULTY")) || (Set.of("approvals","resources","activity").contains(page)&&role(user,"STUDENT"))) { response.sendError(403);return; }
@@ -127,7 +137,7 @@ public final class CampusServlet extends HttpServlet {
                             check(system.getRegistrationFileHandler().isRegistered(id,user.getUsername()),"Registration could not be saved. Only approved events are open.");
                             message="You're on the list! Your event registration is confirmed.";destination="/app?page=registrations";break;
                         }
-                        case "allocateVenue": allow(user,"FACULTY","ADMIN"); destination="/app?page=resources"; VenueAdapter.allocate(user,required(request,"id"),required(request,"venueId"),Integer.parseInt(required(request,"attendees")),Double.parseDouble(required(request,"budget")),input(request,"equipment"));message="Selected venue, equipment and support staff allocated.";break;
+                        case "allocateVenue": allow(user,"FACULTY","ADMIN"); destination="/app?page=resources"; VenueAdapter.allocate(user,required(request,"id"),required(request,"venueId"),Integer.parseInt(required(request,"attendees")),Double.parseDouble(required(request,"budget")),input(request,"equipment"),request.getParameter("strategy")==null?"1":required(request,"strategy"));message="Selected venue, equipment and support staff allocated.";break;
                         case "allocate": allow(user,"FACULTY","ADMIN");check(!system.getResourceFileHandler().resourceExists(id),"Resources are already allocated.");EventWorkflowController.allocateResources(system,lines(id));check(system.getResourceFileHandler().resourceExists(id),"Only approved events can receive resources.");message="Venue, equipment and support staff allocated.";destination="/app?page=resources";break;
                         case "publish": allow(user,"FACULTY","ADMIN","HOD","DEAN");check(system.getEventFileHandler().isEventApproved(id),"Updates are available for approved events only.");int count=system.getEventCoordinator().eventUpdated(id,required(request,"message"));message="Update published to "+count+" registered student(s).";break;
                         case "prepare": {

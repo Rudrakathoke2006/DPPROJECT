@@ -12,6 +12,9 @@ public class EventFileHandler {
     private static final String HEADER = "eventId,eventName,eventType,eventLevel,organizer,date,venue,status";
 
     public boolean saveEvent(Event event) {
+        if (event == null || event.getEventId() == null || !event.getEventId().matches("[A-Za-z0-9_-]{1,40}")) {
+            throw new IllegalArgumentException("A valid event ID is required before saving.");
+        }
         if (eventExists(event.getEventId())) {
             view.ConsoleView.println("Event ID already exists. Event not saved.");
             return false;
@@ -172,7 +175,7 @@ public class EventFileHandler {
     private void ensureFile() {
         File file = new File(FILE_PATH);
 
-        if (file.exists()) {
+        if (file.exists() && file.length() > 0) {
             return;
         }
 

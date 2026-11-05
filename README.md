@@ -1,142 +1,92 @@
-SMART UNIVERSITY EVENT & FEST MANAGEMENT SYSTEM
-================================================
-A Java console application for planning, approving, coordinating, and managing university events. The application stores its operational data in CSV files, making the records easy to inspect and maintain without a database server.
+# Campus & Co. — complete Java Design Patterns project
 
-1. PROJECT OVERVIEW
--------------------
-The system supports students, faculty members, Heads of Department (HODs), the Dean, and an administrator. It provides event creation and editing, role-based approval, venue and resource allocation, student registration, notifications, event history, and coordination status reporting.
+## Run on Windows
 
-2. MAIN FEATURES
-----------------
-- Role-based login for Student, Faculty, HOD, Dean, and Admin accounts.
-- Event creation with event type, event level, date, venue, budget, capacity, duration, equipment, and special instructions.
-- Approval workflow based on event level:
-  * DEPARTMENT: Faculty makes the final decision.
-  * INTER_DEPARTMENT: Faculty forwards the request to the HOD, who makes the final decision.
-  * UNIVERSITY: Faculty forwards to the HOD, who forwards to the Dean for the final decision.
-- Event editing with saved snapshots and undo support.
-- Event cloning to reuse event details while creating a separate pending event.
-- Venue selection using capacity-first, budget-first, or equipment-first strategies.
-- Resource allocation through event-type-specific resource families.
-- Student registration for approved events, with EMAIL, SMS, or INAPP notification-channel selection.
-- Event update notifications for registered students.
-- Coordination status showing approval, allocation, registration, and notification information.
-- CSV-based persistence across application runs.
+Install a **JDK 17 or newer** (a JRE is insufficient). Extract the entire ZIP first. Open PowerShell in the extracted `Campus-Co-Final` folder:
 
-3. DESIGN PATTERNS
-------------------
-The project demonstrates 13 design patterns. The following source files are the main entry points for each pattern.
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\run.ps1
+```
 
-1. Singleton — src/singleton/FestManagementSystem.java
-   Maintains the shared event-management system instance and its coordinated services.
-2. Proxy — src/proxy/EventServiceProxy.java
-   Controls access to event services through authentication and role checks.
-3. Factory Method — src/factory/EventCreator.java and concrete event creators
-   Creates event objects for technical, cultural, sports, and workshop events.
-4. Chain of Responsibility — src/chain/ApprovalManager.java and approval handlers
-   Routes approval requests through Faculty, HOD, and Dean according to event level.
-5. Abstract Factory — src/abstractfactory/ResourceFactory.java and concrete factories
-   Creates compatible venue, equipment, and support-staff objects for an event category.
-6. Observer — src/observer/EventUpdateSubject.java and observer classes
-   Notifies registered observers when event updates are published.
-7. Bridge — src/bridge/Notification.java and notification sender classes
-   Separates notification content from delivery channels such as email, SMS, and in-app messages.
-8. Builder — src/builder/EventBuilder.java
-   Builds event objects step by step and applies validation/default values.
-9. Prototype — src/prototype/CloneEventService.java and src/prototype/EventCloner.java
-   Creates new events from existing event templates.
-10. Memento — src/memento/EventEditService.java and src/memento/EventHistoryCaretaker.java
-    Saves event snapshots and supports undoing edits.
-11. Strategy — src/strategy/VenueSelectionStrategy.java and concrete strategies
-    Makes venue ranking interchangeable according to capacity, budget, or equipment priorities.
-12. Template Method — src/template/EventPreparationTemplate.java and concrete preparation classes
-    Defines a common event-preparation sequence with category-specific steps.
-13. Mediator — src/mediator/UniversityEventCoordinator.java
-    Coordinates approval, resource, registration, and notification modules and records lifecycle activity.
+Open http://localhost:8080/app. Stop the server with **Ctrl+C** before resetting or running the console on the same data.
 
-4. TECHNOLOGY AND STORAGE
--------------------------
-- Language: Java
-- Interface: console/menu-driven interaction
-- Persistence: comma-separated values (CSV)
-- External database: not required
-- Java collections may be used internally by implementation classes; CSV files are the persistent data store.
+The launcher compiles all Java source every time, uses the included Tomcat/Jasper dependency JARs, resolves JAVA_HOME or an installed JDK, and reports compilation/startup errors. No Maven or database installation is required. An internet connection is needed only if an included dependency JAR has been removed.
 
-5. PROJECT STRUCTURE
---------------------
-src/       Java source files, grouped by design pattern and application responsibility
- data/     CSV records used by the application
- build/    Compiled classes generated when running the build/test command
-README.txt Project overview, setup, and usage instructions
-run_presentation_tests.sh   Compile and run the automated presentation test suites (Linux/macOS)
-run_presentation_tests.bat  Compile and run the automated presentation test suites (Windows)
+```powershell
+# Alternate port
+powershell -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -Port 8081
+# Console application, sharing the same runtime data
+powershell -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -Console
+# Compile only
+powershell -NoProfile -ExecutionPolicy Bypass -File .\frontend\build.ps1
+```
 
-6. CSV FILE REFERENCE
----------------------
-- users.csv: user accounts, login names, passwords, and roles.
-- events.csv: core event details and current workflow status.
-- event_details.csv: extended event description, budget, capacity, duration, equipment, and instructions.
-- approvals.csv: approval request and decision records.
-- venues.csv: venue capacity, cost, available equipment, and unavailable dates.
-- resources.csv: resources allocated to approved events.
-- registrations.csv: student registrations and selected notification channels.
-- notifications.csv: notifications sent to recipients.
-- event_history.csv: Base64-encoded event snapshots used by the Memento implementation.
-- coordination_log.csv: event lifecycle signals and coordination outcomes.
+## Reset event data
 
-The sample data includes approved and pending events, multiple event categories, role accounts, venue inventory, registrations, notifications, and coordination records. The CSV headers are part of each file's required schema; fields differ where the files serve different purposes.
+Stop Campus & Co. first, then run:
 
-7. SAMPLE LOGIN ACCOUNTS
-------------------------
-These sample accounts are provided in data/users.csv for local demonstration:
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\reset.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\run.ps1
+```
 
-Role       Username   Password
-Student    aarav      aarav123
-Student    meera      meera123
-Faculty    rahul      rahul123
-HOD        priya      priya123
-Dean       anjali     anjali123
-Admin      admin      admin123
+The actual default data location is `frontend/runtime/data`, resolved relative to the project, independent of the shell's working directory. Reset backs up the whole data directory into `frontend/runtime/backups/<timestamp>/data`, then keeps only the header of every CSV except **users.csv** and **venues.csv**. Accounts, passwords, roles and venue definitions remain byte-for-byte unchanged. This clears events, approvals, details, history, registrations, resources/allocations, notifications and coordination records, including any additional CSV record files. Headers are written as UTF-8 without BOM.
 
-These credentials are demonstration data, not suitable for production use.
+An initialization marker prevents missing event CSVs from being reseeded after reset. Existing runtime files are never overwritten with sample files on startup. A runtime lock blocks concurrent launcher/reset operations. Use these scripts instead of running a second Java process directly against live data.
 
-8. BUILD AND RUN
-----------------
-Prerequisite: install a JDK and ensure both java and javac are available from the terminal. Run commands from the project root directory.
+Custom directories are supported; use the same value with both scripts (root script relative paths are relative to the project):
 
-Compile all Java source files:
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -RuntimeDirectory demo-runtime -Port 8081
+# Stop that server first
+powershell -NoProfile -ExecutionPolicy Bypass -File .\reset.ps1 -RuntimeDirectory demo-runtime
+```
 
-  mkdir -p build
-  find src -name '*.java' -print > build/sources.list
-  javac -encoding UTF-8 -d build @build/sources.list
+To restore a backup, stop the application and copy all CSV files from the chosen backup's `data` folder into the runtime `data` folder. Backups are never loaded automatically.
 
-Run the application:
+## Login and workflow
 
-  java -cp build Main
+Existing accounts remain in `data/users.csv` and `frontend/runtime/data/users.csv`.
 
-On Windows, create the build directory, compile the Java files with javac, and then run `java -cp build Main` from the project root. The supplied `run_presentation_tests.bat` handles compilation for the automated tests.
+| Role | Username | Password |
+|---|---|---|
+| Faculty | rahul | rahul123 |
+| HOD | priya | priya123 |
+| Dean | anjali | anjali123 |
+| Student | aarav | aarav123 |
+| Admin | admin | admin123 |
 
-The application is designed to be launched from the project root because it reads and writes files under the relative `data/` directory. Keep the CSV files closed in spreadsheet applications while the program is running.
+1. Sign in as Faculty, create an event with a unique explicit Event ID. The existing project uses user-entered event IDs, not an automatic ID generator.
+2. Process approvals: department events finish at Faculty; inter-department events continue to HOD; university events continue to HOD and Dean.
+3. On Resources, select an approved event, attendees, budget and optional semicolon-separated equipment. Choose Capacity First, Budget First or Equipment First. The recommendation and reason update automatically; the recommended venue is selected automatically when changing strategy.
+4. You may select another venue manually or click a venue card. Confirmation revalidates eligibility and date bookings before allocating category equipment and staff through the existing Abstract Factory.
+5. Sign in as a student, register with INAPP, EMAIL or SMS preference, then publish an event update as faculty to see the saved notification.
 
-9. PRESENTATION TESTS
----------------------
-Run all automated regression suites with one command:
+Capacity First maximizes seating, Budget First minimizes booking cost, Equipment First maximizes additional equipment. All require sufficient capacity, affordable cost, mandatory equipment and availability. Same-date allocations and inventory unavailable dates exclude venues. Strategies may legitimately agree when the same venue wins both rankings. For 50 attendees, budget 16000, no equipment and an unbooked date, the supplied inventory yields Open Air Theatre / Innovation Lab / Main Auditorium respectively.
 
-Linux/macOS:
-  ./run_presentation_tests.sh
+Email and SMS retain the original project's simulated console delivery plus CSV history; this project does not configure external mail/SMS providers.
 
-Windows:
-  run_presentation_tests.bat
+## Architecture and error fix
 
-The runner compiles the project and executes the Builder/Prototype checks, full regression checks, Mediator lifecycle checks, Strategy integration checks, and Strategy console regression checks. It prints the purpose and result of each suite and finishes with a pass/fail summary.
+The JSP/servlet MVC frontend delegates to the existing Java services. All original pattern implementations remain: Singleton, Factory Method, Abstract Factory, Builder, Prototype, Proxy, Chain of Responsibility, Observer, Bridge, Mediator, Strategy, Template Method and Memento. Styling is unchanged.
 
-Each automated suite runs in a separate temporary data workspace. The runner resets the relevant test CSVs to their expected initial state, so test-created events and history do not contaminate the sample data used by the menu-driven application. Interactive member demonstration classes remain available in src/ for guided, manual demonstrations; they are not launched automatically because they require user input.
+The old presentation CSV reader used header bytes verbatim. A UTF-8 BOM or whitespace on `eventId` made the map key differ, causing `card.jsp` and other URL builders to pass null to URLEncoder. The reader now normalizes BOM/whitespace for every CSV, validates the event schema and rejects genuinely missing IDs with a diagnostic. Saving rejects missing/invalid IDs, and an empty event file gets its header initialized. Valid IDs remain unchanged. The supplied original CSV headers were clean; the malformed-header regression reproduces the mapping defect rather than assuming the historical runtime file is still present.
 
-10. IMPORTANT USAGE NOTES
--------------------------
-- Launch `Main` only once per application session. Use the main menu to log in or exit.
-- Choosing the logout option in a role menu returns to the main login menu.
-- Only approved events are eligible for student registration and resource allocation.
-- Event approval authority depends on the event level as described above.
-- Keep a backup of the `data/` directory before manually editing CSV records.
-- This is an academic demonstration application. Passwords are stored as plain text in the sample CSV file; do not use real or sensitive credentials.
+## Executed verification
+
+See `tests/VERIFICATION.md` and the included result logs. Tests use disposable runtimes; production data was not reset or modified by tests.
+
+```powershell
+# Backend regressions (requires Python 3)
+powershell -NoProfile -ExecutionPolicy Bypass -File .\frontend\build.ps1
+. .\runtime-common.ps1
+python .\tests\backend.py "$(Find-CampusJdk)/bin/java.exe"
+
+# Fresh HTTP workflow: two terminals, requires Python 3
+powershell -NoProfile -ExecutionPolicy Bypass -File .\reset.ps1 -RuntimeDirectory qa-manual
+powershell -NoProfile -ExecutionPolicy Bypass -File .\run.ps1 -RuntimeDirectory qa-manual -Port 8091
+# In the second terminal:
+python .\tests\workflow.py http://127.0.0.1:8091/app
+```
+
+The legacy sample-data tests remain in `frontend/verify_http.py` and `frontend/verify_fixes.py`; they require a separate new seeded runtime. Original console documentation is retained in `docs/ORIGINAL-CONSOLE-README.md`.

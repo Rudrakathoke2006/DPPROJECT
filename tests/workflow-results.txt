@@ -1,0 +1,56 @@
+PASS Faculty login after reset
+PASS Empty JSP dashboard
+PASS Empty JSP events
+PASS Empty JSP calendar
+PASS Empty JSP approvals
+PASS Empty JSP registrations
+PASS Empty JSP resources
+PASS Empty JSP notifications
+PASS Empty JSP activity
+PASS Empty JSP create
+PASS Sample events absent after reset
+PASS Create and persist Builder event
+PASS Event cards render encoded name and valid ID
+PASS Duplicate ID rejected
+PASS Memento edit
+PASS Memento undo
+PASS Prototype clone
+PASS Approval rahul FINALQA
+PASS Approval rahul FINALCLONE
+PASS Approval priya FINALQA
+PASS Approval priya FINALCLONE
+PASS Approval anjali FINALQA
+PASS Approval anjali FINALCLONE
+PASS Three strategy dropdown options
+PASS Strategy 1 recommendation and reason
+PASS Strategy 2 recommendation and reason
+PASS Strategy 3 recommendation and reason
+PASS Capacity excludes unsuitable venues
+PASS Budget excludes unsuitable venues
+PASS Equipment excludes unsuitable venues
+PASS Manual override through Strategy and Abstract Factory
+PASS Same-date booking excluded
+PASS Booking conflict rejected at commit
+PASS Equipment strategy allocation
+PASS Template preparation
+PASS Student registration
+PASS Duplicate registration rejected
+PASS Observer Bridge Mediator notification
+PASS Notification persisted and visible
+PASS Student role guard
+PASS CSRF guard
+PASS Populated JSP dashboard
+PASS Populated JSP events
+PASS Populated JSP calendar
+PASS Populated JSP approvals
+PASS Populated JSP registrations
+PASS Populated JSP resources
+PASS Populated JSP notifications
+PASS Populated JSP activity
+PASS Populated JSP create
+PASS Populated JSP event&id=FINALQA
+PASS Populated JSP edit&id=FINALQA
+PASS Populated JSP clone&id=FINALQA
+PASS Admin login
+PASS Logout
+55 workflow checks passed
